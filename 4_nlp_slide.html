@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI-900 簡報：自然語言處理</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&display=swap');
+
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            margin: 0;
+            overflow: hidden;
+            background-color: #1a202c;
+            color: white;
+        }
+
+        .slide-container {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+        }
+
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transform: translateX(100%);
+            transition: all 0.6s ease-in-out;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            z-index: 1;
+        }
+
+        .slide.active {
+            opacity: 1;
+            transform: translateX(0);
+            z-index: 10;
+        }
+
+        .slide.prev {
+            opacity: 0;
+            transform: translateX(-100%);
+            z-index: 1;
+        }
+
+        /* Slide Content Styles */
+        .slide-title {
+            font-size: 3.5rem;
+            font-weight: 900;
+            margin-bottom: 2rem;
+            text-align: center;
+            background: linear-gradient(to right, #fbbf24, #d97706); /* Yellow/Orange theme */
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1.2;
+        }
+
+        .concept-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: transform 0.3s;
+        }
+
+        .concept-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(251, 191, 36, 0.5);
+        }
+
+        /* NLP Visuals */
+        .chat-bubble {
+            background-color: white;
+            color: #1f2937;
+            padding: 1rem;
+            border-radius: 1rem;
+            border-bottom-left-radius: 0;
+            margin-bottom: 1rem;
+            position: relative;
+            font-weight: bold;
+            font-size: 1.2rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .highlight-entity {
+            background-color: #fca5a5;
+            padding: 0 4px;
+            border-radius: 4px;
+            color: #7f1d1d;
+        }
+
+        .highlight-phrase {
+            background-color: #93c5fd;
+            padding: 0 4px;
+            border-radius: 4px;
+            color: #1e3a8a;
+        }
+
+        .luis-box {
+            border: 2px dashed rgba(255,255,255,0.3);
+            padding: 1rem;
+            border-radius: 0.5rem;
+            text-align: center;
+        }
+
+        /* Navigation Buttons */
+        .nav-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: none;
+            padding: 1rem;
+            cursor: pointer;
+            z-index: 100;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.3s;
+        }
+
+        .nav-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .prev-btn { left: 2rem; }
+        .next-btn { right: 2rem; }
+
+        /* Progress Bar */
+        .progress-bar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 6px;
+            background: linear-gradient(to right, #fbbf24, #d97706);
+            z-index: 100;
+            transition: width 0.3s;
+        }
+
+        .slide-number {
+            position: absolute;
+            bottom: 1.5rem;
+            right: 2rem;
+            font-size: 1rem;
+            color: rgba(255,255,255,0.5);
+            z-index: 100;
+        }
+
+        /* Animations */
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+        .animate-float { animation: float 3s ease-in-out infinite; }
+    </style>
+</head>
+<body>
+
+    <div class="slide-container">
+
+        <!-- Navigation -->
+        <button class="nav-btn prev-btn" onclick="changeSlide(-1)"><i class="fas fa-chevron-left text-2xl"></i></button>
+        <button class="nav-btn next-btn" onclick="changeSlide(1)"><i class="fas fa-chevron-right text-2xl"></i></button>
+        <div class="progress-bar" id="progressBar"></div>
+        <div class="slide-number" id="slideNumber">1 / 11</div>
+
+        <!-- Slide 1: Title -->
+        <div class="slide active">
+            <div class="text-center">
+                <div class="mb-6 inline-block p-6 rounded-full bg-yellow-900 bg-opacity-30 border border-yellow-500 animate-float">
+                    <i class="fas fa-comments text-7xl text-yellow-400"></i>
+                </div>
+                <h1 class="slide-title">AI-900 重點整理</h1>
+                <h2 class="text-4xl text-gray-300 font-light mb-4">自然語言處理</h2>
+                <p class="text-xl text-yellow-300">讓電腦讀懂文字、聽懂人話</p>
+            </div>
+        </div>
+
+        <!-- Slide 2: Agenda -->
+        <div class="slide">
+            <h1 class="slide-title">本章節四大支柱</h1>
+            <div class="grid grid-cols-2 gap-8 w-full max-w-5xl">
+                <div class="concept-card flex items-center">
+                    <div class="bg-yellow-500/20 p-4 rounded-full mr-4 text-yellow-400 text-2xl"><i class="fas fa-file-alt"></i></div>
+                    <div>
+                        <h3 class="text-2xl font-bold">1. 文字分析</h3>
+                        <p class="text-gray-400">分析文章內容、情緒與重點</p>
+                    </div>
+                </div>
+                <div class="concept-card flex items-center">
+                    <div class="bg-blue-500/20 p-4 rounded-full mr-4 text-blue-400 text-2xl"><i class="fas fa-microphone"></i></div>
+                    <div>
+                        <h3 class="text-2xl font-bold">2. 語音服務</h3>
+                        <p class="text-gray-400">語音轉文字、文字轉語音</p>
+                    </div>
+                </div>
+                <div class="concept-card flex items-center">
+                    <div class="bg-green-500/20 p-4 rounded-full mr-4 text-green-400 text-2xl"><i class="fas fa-language"></i></div>
+                    <div>
+                        <h3 class="text-2xl font-bold">3. 翻譯服務</h3>
+                        <p class="text-gray-400">多國語言即時互譯</p>
+                    </div>
+                </div>
+                <div class="concept-card flex items-center">
+                    <div class="bg-purple-500/20 p-4 rounded-full mr-4 text-purple-400 text-2xl"><i class="fas fa-brain"></i></div>
+                    <div>
+                        <h3 class="text-2xl font-bold">4. 語言理解 (LUIS)</h3>
+                        <p class="text-gray-400">識別使用者的意圖與指令</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 3: Text Analysis - Overview -->
+        <div class="slide">
+            <div class="flex w-full max-w-6xl items-center gap-12">
+                <div class="w-1/3 flex justify-center">
+                    <i class="fas fa-search-plus text-[15rem] text-yellow-500 opacity-80"></i>
+                </div>
+                <div class="flex-1">
+                    <div class="text-yellow-400 text-xl font-bold mb-2">支柱 01</div>
+                    <h1 class="slide-title text-left">文字分析</h1>
+                    <p class="text-2xl text-gray-300 mb-8">從非結構化的文字中提取資訊。</p>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="p-4 bg-gray-800 rounded border border-gray-700">
+                            <h4 class="font-bold text-yellow-300 mb-2">關鍵片語擷取</h4>
+                            <p class="text-sm text-gray-400">找出文章的「重點關鍵字」。</p>
+                        </div>
+                        <div class="p-4 bg-gray-800 rounded border border-gray-700">
+                            <h4 class="font-bold text-yellow-300 mb-2">實體辨識 (NER)</h4>
+                            <p class="text-sm text-gray-400">識別「人名、地點、組織、日期」。</p>
+                        </div>
+                        <div class="p-4 bg-gray-800 rounded border border-gray-700">
+                            <h4 class="font-bold text-yellow-300 mb-2">情感分析</h4>
+                            <p class="text-sm text-gray-400">判斷內容是「正面」還是「負面」。</p>
+                        </div>
+                        <div class="p-4 bg-gray-800 rounded border border-gray-700">
+                            <h4 class="font-bold text-yellow-300 mb-2">語言偵測</h4>
+                            <p class="text-sm text-gray-400">判斷這段文字是「中文」還是「法文」。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 4: Text Analysis - Example 1 -->
+        <div class="slide">
+            <h1 class="slide-title mb-8">實例：關鍵片語 與 實體辨識</h1>
+            <div class="w-full max-w-4xl bg-white text-gray-900 rounded-xl p-8 shadow-2xl">
+                <p class="text-sm text-gray-500 mb-2">原始輸入文字：</p>
+                <div class="text-2xl font-bold mb-8 border-l-4 border-blue-500 pl-4">
+                    "陳小明上週去了台北的101大樓，他說那裡的風景很壯觀。"
+                </div>
+
+                <div class="grid grid-cols-2 gap-8">
+                    <!-- Key Phrase -->
+                    <div>
+                        <h3 class="text-xl font-bold text-blue-600 mb-2"><i class="fas fa-tag mr-2"></i>關鍵片語擷取</h3>
+                        <p class="text-gray-600 mb-2">AI 認為這篇文章的重點是：</p>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full font-bold">101大樓</span>
+                            <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full font-bold">風景</span>
+                        </div>
+                    </div>
+
+                    <!-- NER -->
+                    <div>
+                        <h3 class="text-xl font-bold text-red-600 mb-2"><i class="fas fa-id-card mr-2"></i>實體辨識</h3>
+                        <p class="text-gray-600 mb-2">AI 識別出的特定資訊：</p>
+                        <ul class="space-y-1">
+                            <li><span class="text-gray-500">人名：</span> <span class="font-bold">陳小明</span></li>
+                            <li><span class="text-gray-500">時間：</span> <span class="font-bold">上週</span></li>
+                            <li><span class="text-gray-500">地點：</span> <span class="font-bold">台北、101大樓</span></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 5: Text Analysis - Example 2 -->
+        <div class="slide">
+            <h1 class="slide-title mb-8">實例：情感分析</h1>
+            <div class="flex flex-col gap-6 w-full max-w-4xl">
+                <!-- Positive -->
+                <div class="bg-gray-800 p-6 rounded-xl border-l-8 border-green-500 flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-400 text-sm mb-1">餐廳評論 A</p>
+                        <p class="text-xl font-bold">"這家餐廳的牛排真的太好吃了，服務也很周到！"</p>
+                    </div>
+                    <div class="text-center ml-4">
+                        <i class="fas fa-smile text-5xl text-green-400 mb-2"></i>
+                        <p class="text-green-400 font-bold">正面 (98%)</p>
+                    </div>
+                </div>
+
+                <!-- Negative -->
+                <div class="bg-gray-800 p-6 rounded-xl border-l-8 border-red-500 flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-400 text-sm mb-1">餐廳評論 B</p>
+                        <p class="text-xl font-bold">"排隊等太久了，而且上菜時湯都冷掉了，非常失望。"</p>
+                    </div>
+                    <div class="text-center ml-4">
+                        <i class="fas fa-frown text-5xl text-red-400 mb-2"></i>
+                        <p class="text-red-400 font-bold">負面 (95%)</p>
+                    </div>
+                </div>
+
+                <!-- Mixed -->
+                <div class="bg-gray-800 p-6 rounded-xl border-l-8 border-yellow-500 flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-400 text-sm mb-1">餐廳評論 C</p>
+                        <p class="text-xl font-bold">"食物雖然很棒，但是價格實在太貴了。"</p>
+                    </div>
+                    <div class="text-center ml-4">
+                        <i class="fas fa-meh text-5xl text-yellow-400 mb-2"></i>
+                        <p class="text-yellow-400 font-bold">混合 / 中立</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 6: Speech Services -->
+        <div class="slide">
+            <div class="flex w-full max-w-6xl items-center gap-12">
+                <div class="flex-1">
+                    <div class="text-blue-400 text-xl font-bold mb-2">支柱 02</div>
+                    <h1 class="slide-title text-left">語音服務</h1>
+                    <p class="text-2xl text-gray-300 mb-8">聲音與文字的轉換橋樑。</p>
+
+                    <div class="space-y-6">
+                        <div class="concept-card flex items-center">
+                            <i class="fas fa-comment-alt text-3xl text-blue-400 mr-4 w-12 text-center"></i>
+                            <div>
+                                <h3 class="text-xl font-bold text-white">語音轉文字</h3>
+                                <p class="text-gray-400">將口語音訊轉換成書面文字。</p>
+                                <p class="text-sm text-blue-300 mt-1">應用：自動產生會議記錄、影片字幕。</p>
+                            </div>
+                        </div>
+                        <div class="concept-card flex items-center">
+                            <i class="fas fa-volume-up text-3xl text-blue-400 mr-4 w-12 text-center"></i>
+                            <div>
+                                <h3 class="text-xl font-bold text-white">文字轉語音</h3>
+                                <p class="text-gray-400">將文字轉換成類似真人的語音。</p>
+                                <p class="text-sm text-blue-300 mt-1">應用：導航語音播報、朗讀文章。</p>
+                            </div>
+                        </div>
+                        <div class="concept-card flex items-center">
+                            <i class="fas fa-headset text-3xl text-blue-400 mr-4 w-12 text-center"></i>
+                            <div>
+                                <h3 class="text-xl font-bold text-white">語音翻譯</h3>
+                                <p class="text-gray-400">即時翻譯口語音訊。</p>
+                                <p class="text-sm text-blue-300 mt-1">應用：跨國會議即時口譯。</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="w-1/3 flex justify-center">
+                    <i class="fas fa-wave-square text-[15rem] text-blue-500 opacity-80"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 7: Translation Services -->
+        <div class="slide">
+            <div class="text-center max-w-4xl">
+                <div class="text-green-400 text-xl font-bold mb-2">支柱 03</div>
+                <h1 class="slide-title">翻譯服務 (Translator)</h1>
+                <p class="text-2xl text-gray-300 mb-12">打破語言隔閡的工具。</p>
+
+                <div class="flex items-center justify-center gap-8 mb-8">
+                    <div class="bg-white text-gray-900 p-6 rounded-xl font-bold text-2xl w-64 shadow-lg">
+                        Hello World
+                    </div>
+                    <i class="fas fa-exchange-alt text-4xl text-gray-500 animate-pulse"></i>
+                    <div class="bg-white text-gray-900 p-6 rounded-xl font-bold text-2xl w-64 shadow-lg">
+                        你好，世界
+                    </div>
+                </div>
+
+                <div class="bg-gray-800 p-8 rounded-xl border border-gray-700 text-left">
+                    <h3 class="text-xl font-bold text-green-400 mb-4">主要功能：</h3>
+                    <ul class="space-y-3 text-lg text-gray-300">
+                        <li><i class="fas fa-check text-green-500 mr-2"></i> <strong>文字翻譯：</strong> 支援 100 多種語言互譯。</li>
+                        <li><i class="fas fa-check text-green-500 mr-2"></i> <strong>語言偵測：</strong> 自動判斷來源語言。</li>
+                        <li><i class="fas fa-check text-green-500 mr-2"></i> <strong>自訂翻譯：</strong> 針對特定行業（如醫療、法律）術語進行模型訓練。</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 8: Language Understanding (LUIS) Intro -->
+        <div class="slide">
+            <div class="flex w-full max-w-6xl items-center gap-12">
+                <div class="w-1/3 flex justify-center">
+                    <i class="fas fa-brain text-[15rem] text-purple-500 opacity-80"></i>
+                </div>
+                <div class="flex-1">
+                    <div class="text-purple-400 text-xl font-bold mb-2">支柱 04</div>
+                    <h1 class="slide-title text-left">語言理解 (LUIS)</h1>
+                    <p class="text-2xl text-gray-300 mb-8">不只是讀懂字，而是讀懂使用者的「心意」。</p>
+
+                    <div class="bg-gray-800 p-8 rounded-xl border-l-4 border-purple-500">
+                        <p class="text-xl text-gray-300 mb-6">這項服務專門用來預測使用者說這句話是「想要做什麼」，是構建聊天機器人的核心大腦。</p>
+
+                        <div class="p-4 bg-purple-900/30 rounded text-purple-200 font-bold">
+                            <i class="fas fa-lightbulb mr-2"></i> 考試重點：三大核心要素 (語句、意圖、實體)
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 9: LUIS Concepts - Interactive Visual -->
+        <div class="slide">
+            <h1 class="slide-title mb-4">語言理解的三大要素</h1>
+            <p class="text-xl text-gray-400 mb-12">情境：使用者對著智慧音箱說話</p>
+
+            <div class="w-full max-w-5xl">
+                <!-- Utterance -->
+                <div class="mb-8">
+                    <div class="text-center text-gray-500 mb-2 font-bold">1. 語句 (Utterance)</div>
+                    <div class="bg-white text-gray-900 text-3xl font-bold p-6 rounded-2xl text-center shadow-lg mx-auto w-3/4">
+                        "我想訂一張下週去<span class="text-red-600">倫敦</span>的機票"
+                    </div>
+                    <p class="text-center text-gray-400 mt-2 text-sm">使用者實際輸入或說出的那一句話。</p>
+                </div>
+
+                <div class="grid grid-cols-2 gap-12">
+                    <!-- Intent -->
+                    <div class="luis-box border-purple-400">
+                        <div class="text-purple-400 font-bold text-xl mb-2">2. 意圖 (Intent)</div>
+                        <div class="text-4xl text-white font-bold mb-2"><i class="fas fa-plane-departure mr-2"></i> 訂機票</div>
+                        <p class="text-gray-400 text-sm">使用者的「目的」。他想要做什麼？</p>
+                    </div>
+
+                    <!-- Entity -->
+                    <div class="luis-box border-red-400">
+                        <div class="text-red-400 font-bold text-xl mb-2">3. 實體 (Entity)</div>
+                        <div class="text-4xl text-white font-bold mb-2"><i class="fas fa-map-marker-alt mr-2"></i> 倫敦</div>
+                        <p class="text-gray-400 text-sm">句中的「具體細節」。地點、時間、數量等。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 10: Quiz / Scenarios -->
+        <div class="slide">
+            <h1 class="slide-title mb-8">考前速記：情境對應</h1>
+            <div class="grid grid-cols-2 gap-8 w-full max-w-5xl">
+
+                <!-- Scenario 1 -->
+                <div class="concept-card">
+                    <p class="text-gray-400 text-sm mb-1">情境</p>
+                    <p class="text-xl font-bold mb-3">想要知道客戶對新產品的評價是開心還是生氣。</p>
+                    <div class="border-t border-gray-600 pt-3 flex justify-between items-center">
+                        <span class="text-sm">使用服務：</span>
+                        <span class="text-yellow-400 font-bold text-lg">情感分析</span>
+                    </div>
+                </div>
+
+                <!-- Scenario 2 -->
+                <div class="concept-card">
+                    <p class="text-gray-400 text-sm mb-1">情境</p>
+                    <p class="text-xl font-bold mb-3">從法律合約中快速抓出所有的「公司名稱」和「日期」。</p>
+                    <div class="border-t border-gray-600 pt-3 flex justify-between items-center">
+                        <span class="text-sm">使用服務：</span>
+                        <span class="text-yellow-400 font-bold text-lg">實體辨識 (NER)</span>
+                    </div>
+                </div>
+
+                <!-- Scenario 3 -->
+                <div class="concept-card">
+                    <p class="text-gray-400 text-sm mb-1">情境</p>
+                    <p class="text-xl font-bold mb-3">智慧家庭系統需要理解「打開客廳的燈」這個指令。</p>
+                    <div class="border-t border-gray-600 pt-3 flex justify-between items-center">
+                        <span class="text-sm">使用服務：</span>
+                        <span class="text-purple-400 font-bold text-lg">語言理解 (LUIS)</span>
+                    </div>
+                </div>
+
+                <!-- Scenario 4 -->
+                <div class="concept-card">
+                    <p class="text-gray-400 text-sm mb-1">情境</p>
+                    <p class="text-xl font-bold mb-3">將客服通話的錄音檔變成文字檔以利搜尋。</p>
+                    <div class="border-t border-gray-600 pt-3 flex justify-between items-center">
+                        <span class="text-sm">使用服務：</span>
+                        <span class="text-blue-400 font-bold text-lg">語音轉文字</span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Slide 11: End -->
+        <div class="slide">
+            <div class="text-center">
+                <i class="fas fa-check-circle text-8xl text-green-500 mb-8"></i>
+                <h1 class="slide-title">NLP 單元結束</h1>
+                <p class="text-2xl text-gray-400 mb-12">下一站：交談式 AI</p>
+                <button onclick="location.reload()" class="px-8 py-3 bg-yellow-600 hover:bg-yellow-700 rounded-full text-xl font-bold transition">
+                    <i class="fas fa-redo mr-2"></i> 重新複習
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const progressBar = document.getElementById('progressBar');
+        const slideNumber = document.getElementById('slideNumber');
+        const totalSlides = slides.length;
+
+        function updateSlideUI() {
+            slides.forEach((slide, index) => {
+                slide.classList.remove('active', 'prev');
+                if (index === currentSlide) {
+                    slide.classList.add('active');
+                } else if (index < currentSlide) {
+                    slide.classList.add('prev');
+                }
+            });
+
+            // Update Progress Bar
+            const progress = ((currentSlide + 1) / totalSlides) * 100;
+            progressBar.style.width = `${progress}%`;
+            slideNumber.innerText = `${currentSlide + 1} / ${totalSlides}`;
+        }
+
+        function changeSlide(direction) {
+            const nextSlide = currentSlide + direction;
+            if (nextSlide >= 0 && nextSlide < totalSlides) {
+                currentSlide = nextSlide;
+                updateSlideUI();
+            }
+        }
+
+        // Keyboard Navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                changeSlide(1);
+            } else if (e.key === 'ArrowLeft') {
+                changeSlide(-1);
+            }
+        });
+
+        // Initialize
+        updateSlideUI();
+    </script>
+</body>
+</html>

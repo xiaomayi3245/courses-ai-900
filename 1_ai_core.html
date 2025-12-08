@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI-900 重點整理：核心概念與負責任 AI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&display=swap');
+
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            background-color: #f0f4f8;
+            color: #1a202c;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+
+        /* Animations */
+        @keyframes scan {
+            0% { top: 0%; opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { top: 100%; opacity: 0; }
+        }
+
+        @keyframes pulse-red {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+            70% { transform: scale(1.1); box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .animate-scan {
+            animation: scan 2s linear infinite;
+        }
+
+        .animate-pulse-red {
+            animation: pulse-red 2s infinite;
+        }
+
+        .animate-float {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .fade-in-section {
+            animation: fadeIn 0.8s ease-out forwards;
+            opacity: 0;
+        }
+
+        .delay-100 { animation-delay: 0.1s; }
+        .delay-200 { animation-delay: 0.2s; }
+        .delay-300 { animation-delay: 0.3s; }
+
+        /* Flip Card Styles */
+        .flip-card {
+            background-color: transparent;
+            perspective: 1000px;
+            height: 300px;
+        }
+
+        .flip-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            border-radius: 0.75rem;
+        }
+
+        .flip-card:hover .flip-card-inner {
+            transform: rotateY(180deg);
+        }
+
+        .flip-card-front, .flip-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            border-radius: 0.75rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 1.5rem;
+        }
+
+        .flip-card-front {
+            background-color: white;
+            color: black;
+        }
+
+        .flip-card-back {
+            background: linear-gradient(135deg, #4f46e5 0%, #3b82f6 100%);
+            color: white;
+            transform: rotateY(180deg);
+            overflow-y: auto;
+        }
+
+        /* Chart Animations */
+        .bar {
+            transition: height 1s ease-in-out;
+        }
+        .bar:hover {
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation -->
+    <nav class="bg-white shadow-md fixed w-full z-50 top-0">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex items-center">
+                    <i class="fas fa-brain text-blue-600 text-2xl mr-2"></i>
+                    <span class="font-bold text-xl text-gray-800">AI-900 學習指南</span>
+                </div>
+                <div class="hidden md:flex space-x-8">
+                    <a href="#workloads" class="text-gray-600 hover:text-blue-600 transition">常見工作負載</a>
+                    <a href="#principles" class="text-gray-600 hover:text-blue-600 transition">負責任 AI 原則</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="pt-24 pb-12 bg-gradient-to-br from-blue-50 to-indigo-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-4 fade-in-section">AI 核心概念與負責任 AI</h1>
+            <p class="text-xl text-gray-600 max-w-3xl mx-auto fade-in-section delay-100">
+                本頁面將 AI-900 考題中的第一類別視覺化。透過動畫與舉例，幫助您快速理解 5 種常見 AI 工作負載與 6 大負責任 AI 原則。
+            </p>
+        </div>
+    </header>
+
+    <!-- Part 1: AI Workloads -->
+    <section id="workloads" class="py-16 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-gray-900 mb-2">1. 常見的 AI 工作負載</h2>
+                <div class="w-24 h-1 bg-blue-500 mx-auto rounded"></div>
+                <p class="mt-4 text-gray-600">將滑鼠懸停在卡片上查看考題範例與詳細說明。</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+
+                <!-- Workload 1: Machine Learning (Prediction) -->
+                <div class="flip-card fade-in-section delay-100">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front border border-gray-200">
+                            <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mb-4 text-blue-600 text-3xl">
+                                <i class="fas fa-chart-line"></i>
+                            </div>
+                            <h3 class="text-xl font-bold mb-2">機器學習 (預測)</h3>
+                            <p class="text-gray-500 mb-4 text-sm">Prediction / Regression / Classification</p>
+
+                            <!-- Simple Chart Animation -->
+                            <div class="flex items-end space-x-2 h-24 w-32 pb-2 border-b border-l border-gray-300">
+                                <div class="w-4 bg-blue-300 h-[20%] bar animate-float" style="animation-delay: 0s;"></div>
+                                <div class="w-4 bg-blue-400 h-[40%] bar animate-float" style="animation-delay: 0.2s;"></div>
+                                <div class="w-4 bg-blue-500 h-[60%] bar animate-float" style="animation-delay: 0.4s;"></div>
+                                <div class="w-4 bg-blue-600 h-[80%] bar animate-float" style="animation-delay: 0.6s;"></div>
+                                <div class="w-4 bg-blue-700 h-[30%] bar border-2 border-red-400" title="Anomaly?"></div> <!-- Little anomaly hint -->
+                            </div>
+                            <p class="mt-2 text-sm text-gray-600">基於歷史數據預測未來數值或類別。</p>
+                        </div>
+                        <div class="flip-card-back">
+                            <h3 class="text-lg font-bold mb-2 border-b border-white/30 pb-1">應用舉例</h3>
+                            <ul class="text-sm text-left list-disc list-inside space-y-2 mb-4">
+                                <li>預測下個月的自行車租借數量 (迴歸)。</li>
+                                <li>判斷電子郵件是否為垃圾郵件 (分類)。</li>
+                                <li>根據客戶特徵進行分群 (叢集)。</li>
+                            </ul>
+                            <div class="bg-white/10 p-2 rounded text-xs text-left w-full">
+                                <strong>考題關鍵字：</strong><br>
+                                "預測未來數值", "分類", "歷史資料"
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Workload 2: Anomaly Detection -->
+                <div class="flip-card fade-in-section delay-200">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front border border-gray-200">
+                            <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mb-4 text-red-600 text-3xl">
+                                <i class="fas fa-exclamation-triangle"></i>
+                            </div>
+                            <h3 class="text-xl font-bold mb-2">異常偵測</h3>
+                            <p class="text-gray-500 mb-4 text-sm">Anomaly Detection</p>
+
+                            <!-- Anomaly Visual -->
+                            <div class="relative w-full h-20 flex items-center justify-center bg-gray-50 rounded mb-2 overflow-hidden">
+                                <div class="absolute w-full h-1 bg-gray-300"></div>
+                                <div class="w-3 h-3 bg-green-500 rounded-full absolute left-4"></div>
+                                <div class="w-3 h-3 bg-green-500 rounded-full absolute left-12"></div>
+                                <div class="w-3 h-3 bg-green-500 rounded-full absolute left-20"></div>
+                                <div class="w-5 h-5 bg-red-500 rounded-full absolute right-12 animate-pulse-red z-10"></div>
+                                <div class="w-3 h-3 bg-green-500 rounded-full absolute right-4"></div>
+                            </div>
+                            <p class="mt-2 text-sm text-gray-600">識別不尋常的模式或事件。</p>
+                        </div>
+                        <div class="flip-card-back">
+                            <h3 class="text-lg font-bold mb-2 border-b border-white/30 pb-1">應用舉例</h3>
+                            <ul class="text-sm text-left list-disc list-inside space-y-2 mb-4">
+                                <li>偵測信用卡詐騙交易。</li>
+                                <li>監控工廠機器的溫度異常。</li>
+                                <li>網站流量突然暴增 (DDoS 攻擊)。</li>
+                            </ul>
+                            <div class="bg-white/10 p-2 rounded text-xs text-left w-full">
+                                <strong>考題 Q005：</strong><br>
+                                "在慣常模式中尋找偏差藉以識別可疑的登入" → 是異常偵測。
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Workload 3: Computer Vision -->
+                <div class="flip-card fade-in-section delay-300">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front border border-gray-200">
+                            <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mb-4 text-purple-600 text-3xl">
+                                <i class="fas fa-eye"></i>
+                            </div>
+                            <h3 class="text-xl font-bold mb-2">電腦視覺</h3>
+                            <p class="text-gray-500 mb-4 text-sm">Computer Vision</p>
+
+                            <!-- Vision Animation -->
+                            <div class="relative w-32 h-20 bg-gray-200 rounded-lg overflow-hidden border-2 border-gray-300">
+                                <i class="fas fa-car absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-gray-500 text-3xl"></i>
+                                <div class="absolute w-full h-1 bg-green-400 shadow-[0_0_10px_#4ade80] animate-scan"></div>
+                                <div class="absolute top-2 right-2 text-[10px] bg-green-500 text-white px-1 rounded">Car: 99%</div>
+                            </div>
+                            <p class="mt-2 text-sm text-gray-600">讓應用程式能夠「看見」並解讀影像。</p>
+                        </div>
+                        <div class="flip-card-back">
+                            <h3 class="text-lg font-bold mb-2 border-b border-white/30 pb-1">應用舉例</h3>
+                            <ul class="text-sm text-left list-disc list-inside space-y-2 mb-4">
+                                <li>物件偵測：找出照片中的車輛位置。</li>
+                                <li>OCR：讀取收據上的文字。</li>
+                                <li>臉部辨識：門禁系統刷臉入場。</li>
+                                <li>影像分類：分辨照片是貓還是狗。</li>
+                            </ul>
+                            <div class="bg-white/10 p-2 rounded text-xs text-left w-full">
+                                <strong>考題 Q036：</strong><br>
+                                看到香蕉、橘子被框起來並標示名稱 → 物件偵測。
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Workload 4: Natural Language Processing (NLP) -->
+                <div class="flip-card fade-in-section delay-100">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front border border-gray-200">
+                            <div class="w-16 h-16 bg-yellow-100 rounded-full flex items-center justify-center mb-4 text-yellow-600 text-3xl">
+                                <i class="fas fa-comments"></i>
+                            </div>
+                            <h3 class="text-xl font-bold mb-2">自然語言處理 (NLP)</h3>
+                            <p class="text-gray-500 mb-4 text-sm">Natural Language Processing</p>
+
+                            <!-- NLP Visual -->
+                            <div class="flex items-center justify-center space-x-2">
+                                <div class="bg-gray-100 px-3 py-1 rounded-l-lg text-sm">Hello</div>
+                                <i class="fas fa-arrow-right text-gray-400"></i>
+                                <div class="bg-blue-100 px-3 py-1 rounded-r-lg text-sm font-bold text-blue-700">你好</div>
+                            </div>
+                            <div class="mt-2 flex space-x-1 justify-center">
+                                <span class="px-2 py-0.5 bg-green-100 text-green-700 text-xs rounded">Sentiment: Positive</span>
+                            </div>
+                            <p class="mt-2 text-sm text-gray-600">理解、分析與生成人類語言。</p>
+                        </div>
+                        <div class="flip-card-back">
+                            <h3 class="text-lg font-bold mb-2 border-b border-white/30 pb-1">應用舉例</h3>
+                            <ul class="text-sm text-left list-disc list-inside space-y-2 mb-4">
+                                <li>情感分析：判斷產品評論是正面或負面。</li>
+                                <li>翻譯：將英文文件轉為中文。</li>
+                                <li>實體辨識：從文章中抓出人名、地點。</li>
+                                <li>關鍵片語擷取：找出文章重點。</li>
+                            </ul>
+                            <div class="bg-white/10 p-2 rounded text-xs text-left w-full">
+                                <strong>考題 Q049：</strong><br>
+                                分析客戶評論正面或負面程度 → 情感分析。
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Workload 5: Conversational AI -->
+                <div class="flip-card fade-in-section delay-200">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front border border-gray-200">
+                            <div class="w-16 h-16 bg-indigo-100 rounded-full flex items-center justify-center mb-4 text-indigo-600 text-3xl">
+                                <i class="fas fa-robot"></i>
+                            </div>
+                            <h3 class="text-xl font-bold mb-2">交談式 AI</h3>
+                            <p class="text-gray-500 mb-4 text-sm">Conversational AI</p>
+
+                            <!-- Chat Visual -->
+                            <div class="w-full max-w-[180px] space-y-2">
+                                <div class="bg-gray-100 p-2 rounded-lg rounded-tl-none text-xs text-left mr-8">訂單什麼時候到？</div>
+                                <div class="bg-indigo-100 p-2 rounded-lg rounded-tr-none text-xs text-right ml-8 text-indigo-800">預計明天送達！</div>
+                            </div>
+                            <p class="mt-2 text-sm text-gray-600">透過對話與使用者互動的 AI 代理人。</p>
+                        </div>
+                        <div class="flip-card-back">
+                            <h3 class="text-lg font-bold mb-2 border-b border-white/30 pb-1">應用舉例</h3>
+                            <ul class="text-sm text-left list-disc list-inside space-y-2 mb-4">
+                                <li>網頁客服聊天機器人 (Web Chatbots)。</li>
+                                <li>語音助理 (Cortana, Siri, Alexa)。</li>
+                                <li>電話自動語音應答系統。</li>
+                            </ul>
+                            <div class="bg-white/10 p-2 rounded text-xs text-left w-full">
+                                <strong>考題 Q001：</strong><br>
+                                網頁聊天機器人可帶來的利益 → 客戶服務代理人的工作量下降 (B)。
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Summary Card -->
+                <div class="flip-card fade-in-section delay-300">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front bg-gray-50 border border-dashed border-gray-400">
+                            <div class="w-16 h-16 bg-gray-200 rounded-full flex items-center justify-center mb-4 text-gray-600 text-3xl">
+                                <i class="fas fa-lightbulb"></i>
+                            </div>
+                            <h3 class="text-xl font-bold mb-2 text-gray-700">小測驗</h3>
+                            <p class="text-gray-500 mb-4 text-sm">測試你的分類能力</p>
+                            <p class="mt-2 text-sm text-gray-600">翻轉卡片查看一個常見的混淆點。</p>
+                        </div>
+                        <div class="flip-card-back bg-gradient-to-br from-gray-700 to-gray-900">
+                            <h3 class="text-lg font-bold mb-2 border-b border-white/30 pb-1">NLP vs 交談式 AI</h3>
+                            <p class="text-sm mb-4">
+                                雖然聊天機器人使用 NLP 來理解語言，但<strong>「聊天機器人」</strong>本身通常歸類為<strong>交談式 AI</strong> 工作負載。
+                            </p>
+                            <p class="text-sm">
+                                如果題目問的是「判斷情感」、「翻譯」，選 NLP。
+                                如果問的是「與客戶互動的機器人」，選交談式 AI。
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Part 2: Responsible AI Principles -->
+    <section id="principles" class="py-16 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl font-bold text-gray-900 mb-2">2. Microsoft 負責任 AI 的六大指導原則</h2>
+                <div class="w-24 h-1 bg-green-500 mx-auto rounded"></div>
+                <p class="mt-4 text-gray-600">這些原則確保 AI 系統在開發與部署時合乎道德與法律。</p>
+            </div>
+
+            <!-- Hex Grid Layout for Principles -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+                <!-- Principle 1: Fairness -->
+                <div class="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition transform hover:-translate-y-1 fade-in-section border-t-4 border-blue-500">
+                    <div class="flex items-center mb-4">
+                        <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 mr-3">
+                            <i class="fas fa-balance-scale"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-800">1. 公平性 (Fairness)</h3>
+                    </div>
+                    <p class="text-gray-600 text-sm mb-4">AI 系統應公平對待所有人，不應基於種族、性別或年齡產生歧視。</p>
+
+                    <!-- Visual Chart: Balance -->
+                    <div class="bg-gray-100 rounded p-3 mb-3">
+                        <div class="flex justify-between items-end h-16 px-4">
+                            <div class="w-1/3 bg-blue-400 h-12 mx-1 rounded-t text-center text-[10px] text-white pt-1">群組A</div>
+                            <div class="w-1/3 bg-blue-400 h-12 mx-1 rounded-t text-center text-[10px] text-white pt-1">群組B</div>
+                        </div>
+                        <div class="w-full h-1 bg-gray-400 mt-0.5"></div>
+                        <div class="w-0 h-0 border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent border-b-[8px] border-b-gray-500 mx-auto"></div>
+                        <p class="text-center text-xs text-gray-500 mt-1">核准率相同</p>
+                    </div>
+
+                    <div class="text-xs bg-blue-50 p-2 rounded text-blue-800">
+                        <strong>考題範例：</strong> 貸款審核系統不應因性別而有差別待遇。
+                    </div>
+                </div>
+
+                <!-- Principle 2: Reliability & Safety -->
+                <div class="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition transform hover:-translate-y-1 fade-in-section border-t-4 border-green-500">
+                    <div class="flex items-center mb-4">
+                        <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center text-green-600 mr-3">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-800">2. 可靠性和安全性</h3>
+                    </div>
+                    <p class="text-gray-600 text-sm mb-4">AI 系統應在設計的範圍內可靠運作，並能安全地處理未預期的狀況。</p>
+
+                    <!-- Visual: Safety Check -->
+                    <div class="bg-gray-100 rounded p-3 mb-3 flex items-center justify-between">
+                        <div class="flex flex-col items-center">
+                            <i class="fas fa-car text-gray-400 mb-1"></i>
+                            <span class="text-xs">自駕車</span>
+                        </div>
+                        <i class="fas fa-arrow-right text-gray-300"></i>
+                        <div class="flex flex-col items-center">
+                            <i class="fas fa-child text-red-500 mb-1 animate-pulse"></i>
+                            <span class="text-xs text-red-500">障礙物</span>
+                        </div>
+                        <i class="fas fa-arrow-right text-gray-300"></i>
+                        <div class="flex flex-col items-center">
+                            <i class="fas fa-stop-circle text-green-600 mb-1 text-lg"></i>
+                            <span class="text-xs text-green-600 font-bold">安全停止</span>
+                        </div>
+                    </div>
+
+                    <div class="text-xs bg-green-50 p-2 rounded text-green-800">
+                        <strong>考題範例：</strong> 自動駕駛汽車在惡劣天氣下仍能安全行駛。
+                    </div>
+                </div>
+
+                <!-- Principle 3: Privacy & Security -->
+                <div class="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition transform hover:-translate-y-1 fade-in-section border-t-4 border-purple-500">
+                    <div class="flex items-center mb-4">
+                        <div class="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center text-purple-600 mr-3">
+                            <i class="fas fa-user-lock"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-800">3. 隱私權和安全性</h3>
+                    </div>
+                    <p class="text-gray-600 text-sm mb-4">AI 系統應保護個人資料隱私，確保數據只被授權人員存取。</p>
+
+                    <!-- Visual: Data Encryption -->
+                    <div class="bg-gray-100 rounded p-3 mb-3 text-center">
+                        <div class="flex justify-center items-center space-x-2">
+                            <i class="fas fa-file-alt text-gray-400"></i>
+                            <i class="fas fa-long-arrow-alt-right text-gray-400"></i>
+                            <i class="fas fa-lock text-purple-500 text-xl"></i>
+                            <i class="fas fa-long-arrow-alt-right text-gray-400"></i>
+                            <span class="text-xs font-mono bg-gray-200 p-1 rounded">******</span>
+                        </div>
+                        <p class="text-xs text-gray-500 mt-2">資料去識別化與加密</p>
+                    </div>
+
+                    <div class="text-xs bg-purple-50 p-2 rounded text-purple-800">
+                        <strong>考題範例：</strong> 醫療 AI 系統使用去識別化的病歷資料進行訓練。
+                    </div>
+                </div>
+
+                <!-- Principle 4: Inclusiveness -->
+                <div class="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition transform hover:-translate-y-1 fade-in-section border-t-4 border-orange-500">
+                    <div class="flex items-center mb-4">
+                        <div class="w-10 h-10 bg-orange-100 rounded-full flex items-center justify-center text-orange-600 mr-3">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-800">4. 包容性 (Inclusiveness)</h3>
+                    </div>
+                    <p class="text-gray-600 text-sm mb-4">AI 系統應賦予每個人能力，無論其身體能力、性別或背景如何。</p>
+
+                    <!-- Visual: Accessibility -->
+                    <div class="bg-gray-100 rounded p-3 mb-3 flex justify-around items-center">
+                        <i class="fas fa-wheelchair text-gray-500"></i>
+                        <i class="fas fa-blind text-gray-500"></i>
+                        <i class="fas fa-deaf text-gray-500"></i>
+                        <i class="fas fa-check text-green-500 text-xl"></i>
+                    </div>
+
+                    <div class="text-xs bg-orange-50 p-2 rounded text-orange-800">
+                        <strong>考題範例：</strong> 為視障人士提供螢幕閱讀器支援；語音轉文字功能。
+                    </div>
+                </div>
+
+                <!-- Principle 5: Transparency -->
+                <div class="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition transform hover:-translate-y-1 fade-in-section border-t-4 border-cyan-500">
+                    <div class="flex items-center mb-4">
+                        <div class="w-10 h-10 bg-cyan-100 rounded-full flex items-center justify-center text-cyan-600 mr-3">
+                            <i class="fas fa-search"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-800">5. 透明度 (Transparency)</h3>
+                    </div>
+                    <p class="text-gray-600 text-sm mb-4">AI 系統的運作方式與決策過程應該是可以被理解和解釋的。</p>
+
+                    <!-- Visual: Glass Box -->
+                    <div class="bg-gray-100 rounded p-3 mb-3 text-center">
+                        <div class="relative inline-block">
+                            <div class="border-2 border-cyan-400 rounded w-16 h-16 flex items-center justify-center bg-white/50">
+                                <span class="text-xs">邏輯</span>
+                            </div>
+                            <div class="absolute -top-2 -right-2 bg-cyan-600 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs">?</div>
+                        </div>
+                        <p class="text-xs text-gray-500 mt-2">並非「黑盒子」，而是可解釋的模型</p>
+                    </div>
+
+                    <div class="text-xs bg-cyan-50 p-2 rounded text-cyan-800">
+                        <strong>考題範例：</strong> 銀行必須解釋為什麼拒絕了客戶的貸款申請。
+                    </div>
+                </div>
+
+                <!-- Principle 6: Accountability -->
+                <div class="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition transform hover:-translate-y-1 fade-in-section border-t-4 border-red-500">
+                    <div class="flex items-center mb-4">
+                        <div class="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center text-red-600 mr-3">
+                            <i class="fas fa-gavel"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-800">6. 權責性 (Accountability)</h3>
+                    </div>
+                    <p class="text-gray-600 text-sm mb-4">設計和部署 AI 系統的人員必須對其運作方式負責。</p>
+
+                    <!-- Visual: Human in Loop -->
+                    <div class="bg-gray-100 rounded p-3 mb-3 flex items-center justify-center space-x-3">
+                        <i class="fas fa-robot text-gray-400"></i>
+                        <i class="fas fa-arrow-left text-gray-400"></i>
+                        <div class="flex flex-col items-center">
+                            <i class="fas fa-user-tie text-red-600 text-lg"></i>
+                            <span class="text-[10px] font-bold">人類監督</span>
+                        </div>
+                    </div>
+
+                    <div class="text-xs bg-red-50 p-2 rounded text-red-800">
+                        <strong>考題範例：</strong> 即使 AI 自動決策，最終責任仍歸屬於開發與管理該系統的公司或人員。
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <p class="mb-2">AI-900 證照考試準備輔助教材</p>
+            <p class="text-gray-400 text-sm">資料來源：根據您上傳的 Microsoft Azure AI Fundamentals 考古題整理。</p>
+        </div>
+    </footer>
+
+    <script>
+        // Simple Intersection Observer to trigger fade-in animations on scroll
+        document.addEventListener('DOMContentLoaded', () => {
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.1
+            };
+
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, observerOptions);
+
+            const fadeElements = document.querySelectorAll('.fade-in-section');
+            fadeElements.forEach(el => {
+                // Initial state for JS-enabled browsers
+                el.style.opacity = '0';
+                el.style.transform = 'translateY(20px)';
+                el.style.transition = 'opacity 0.6s ease-out, transform 0.6s ease-out';
+                observer.observe(el);
+            });
+        });
+    </script>
+</body>
+</html>

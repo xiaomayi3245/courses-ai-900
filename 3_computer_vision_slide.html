@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI-900 簡報：電腦視覺 (Computer Vision)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&display=swap');
+
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            margin: 0;
+            overflow: hidden;
+            background-color: #1a202c;
+            color: white;
+        }
+
+        .slide-container {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+        }
+
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transform: translateX(100%);
+            transition: all 0.6s ease-in-out;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+            background: linear-gradient(135deg, #111827 0%, #1f2937 100%); /* Darker theme for Vision */
+            z-index: 1;
+        }
+
+        .slide.active {
+            opacity: 1;
+            transform: translateX(0);
+            z-index: 10;
+        }
+
+        .slide.prev {
+            opacity: 0;
+            transform: translateX(-100%);
+            z-index: 1;
+        }
+
+        /* Slide Content Styles */
+        .slide-title {
+            font-size: 3.5rem;
+            font-weight: 900;
+            margin-bottom: 2rem;
+            text-align: center;
+            background: linear-gradient(to right, #c084fc, #6366f1); /* Purple/Indigo theme */
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1.2;
+        }
+
+        .slide-content {
+            font-size: 1.8rem;
+            max-width: 80%;
+            line-height: 1.6;
+        }
+
+        .concept-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: transform 0.3s;
+        }
+
+        .concept-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(167, 139, 250, 0.5);
+        }
+
+        /* Visualization Boxes */
+        .vision-box {
+            position: relative;
+            border: 2px dashed rgba(255, 255, 255, 0.3);
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .bounding-box {
+            position: absolute;
+            border: 3px solid #facc15; /* Yellow */
+            background-color: rgba(250, 204, 21, 0.2);
+            color: #facc15;
+            font-weight: bold;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: flex-start;
+            padding: 2px;
+        }
+
+        /* Navigation Buttons */
+        .nav-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: none;
+            padding: 1rem;
+            cursor: pointer;
+            z-index: 100;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.3s;
+        }
+
+        .nav-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .prev-btn { left: 2rem; }
+        .next-btn { right: 2rem; }
+
+        /* Progress Bar */
+        .progress-bar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 6px;
+            background: linear-gradient(to right, #c084fc, #6366f1);
+            z-index: 100;
+            transition: width 0.3s;
+        }
+
+        .slide-number {
+            position: absolute;
+            bottom: 1.5rem;
+            right: 2rem;
+            font-size: 1rem;
+            color: rgba(255,255,255,0.5);
+            z-index: 100;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="slide-container">
+
+        <!-- Navigation -->
+        <button class="nav-btn prev-btn" onclick="changeSlide(-1)"><i class="fas fa-chevron-left text-2xl"></i></button>
+        <button class="nav-btn next-btn" onclick="changeSlide(1)"><i class="fas fa-chevron-right text-2xl"></i></button>
+        <div class="progress-bar" id="progressBar"></div>
+        <div class="slide-number" id="slideNumber">1 / 14</div>
+
+        <!-- Slide 1: Title -->
+        <div class="slide active">
+            <div class="text-center">
+                <div class="mb-6 inline-block p-6 rounded-full bg-purple-900 bg-opacity-30 border border-purple-500">
+                    <i class="fas fa-eye text-7xl text-purple-400"></i>
+                </div>
+                <h1 class="slide-title">AI-900 重點整理</h1>
+                <h2 class="text-4xl text-gray-300 font-light mb-4">電腦視覺 (Computer Vision)</h2>
+                <p class="text-xl text-purple-300">核心功能解析 & Azure 服務選型指南</p>
+            </div>
+        </div>
+
+        <!-- Slide 2: Agenda -->
+        <div class="slide">
+            <h1 class="slide-title">本章節架構</h1>
+            <div class="flex flex-col md:flex-row gap-8 w-full max-w-6xl">
+                <!-- Part 1: Functions -->
+                <div class="flex-1 bg-gradient-to-br from-slate-800 to-gray-900 p-8 rounded-2xl border-t-4 border-purple-500">
+                    <div class="text-purple-400 text-4xl mb-4"><i class="fas fa-cogs"></i></div>
+                    <h3 class="text-3xl font-bold mb-6">1. 電腦視覺 5 大功能</h3>
+                    <ul class="text-xl text-gray-300 space-y-4">
+                        <li class="flex items-center"><i class="fas fa-camera text-purple-500 w-8"></i> 影像分類 (Classification)</li>
+                        <li class="flex items-center"><i class="fas fa-expand text-purple-500 w-8"></i> 物件偵測 (Detection)</li>
+                        <li class="flex items-center"><i class="fas fa-crop-alt text-purple-500 w-8"></i> 語意分割 (Segmentation)</li>
+                        <li class="flex items-center"><i class="fas fa-font text-purple-500 w-8"></i> OCR (光學字元辨識)</li>
+                        <li class="flex items-center"><i class="fas fa-smile text-purple-500 w-8"></i> 臉部偵測與辨識</li>
+                    </ul>
+                </div>
+                <!-- Part 2: Services -->
+                <div class="flex-1 bg-gradient-to-br from-slate-800 to-gray-900 p-8 rounded-2xl border-t-4 border-indigo-500">
+                    <div class="text-indigo-400 text-4xl mb-4"><i class="fas fa-cloud"></i></div>
+                    <h3 class="text-3xl font-bold mb-6">2. Azure 4 大服務</h3>
+                    <ul class="text-xl text-gray-300 space-y-4">
+                        <li class="flex items-center"><i class="fas fa-cube text-indigo-500 w-8"></i> Azure AI Vision</li>
+                        <li class="flex items-center"><i class="fas fa-tools text-indigo-500 w-8"></i> Custom Vision (自訂視覺)</li>
+                        <li class="flex items-center"><i class="fas fa-id-card text-indigo-500 w-8"></i> Face API</li>
+                        <li class="flex items-center"><i class="fas fa-file-invoice text-indigo-500 w-8"></i> Form Recognizer (文件智慧)</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 3: Function - Image Classification -->
+        <div class="slide">
+            <div class="flex w-full max-w-6xl items-center gap-12">
+                <div class="flex-1">
+                    <div class="text-purple-400 text-xl font-bold mb-2">功能 01</div>
+                    <h1 class="slide-title text-left" style="font-size: 3rem;">影像分類<br>(Image Classification)</h1>
+                    <p class="text-2xl text-gray-300 mb-8">「這張圖片的主題是什麼？」</p>
+
+                    <div class="bg-gray-800 p-6 rounded-xl border border-gray-700">
+                        <h3 class="text-xl font-bold mb-2 text-purple-300">核心概念</h3>
+                        <p class="text-lg text-gray-300 mb-4">將影像歸類到一個或多個標籤 (Labels/Tags)。</p>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="p-3 bg-gray-700 rounded">
+                                <span class="block font-bold text-white mb-1">多類別 (Multi-class)</span>
+                                <span class="text-sm text-gray-400">互斥分類：這是一隻貓 (不是狗)。</span>
+                            </div>
+                            <div class="p-3 bg-gray-700 rounded">
+                                <span class="block font-bold text-white mb-1">多標籤 (Multi-label)</span>
+                                <span class="text-sm text-gray-400">多個屬性：這是一隻貓，且是黑色的。</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Visual -->
+                <div class="w-1/3 flex flex-col items-center">
+                    <div class="vision-box w-64 h-64 bg-gray-800 mb-4">
+                        <i class="fas fa-cat text-9xl text-gray-500"></i>
+                    </div>
+                    <div class="bg-purple-600 px-6 py-2 rounded-full font-bold text-xl">標籤：Cat (99%)</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 4: Function - Object Detection -->
+        <div class="slide">
+            <div class="flex w-full max-w-6xl items-center gap-12">
+                <div class="w-1/3 flex flex-col items-center">
+                    <div class="vision-box w-80 h-64 bg-gray-800 mb-4 relative">
+                        <!-- Car -->
+                        <i class="fas fa-car text-6xl text-gray-500 absolute top-20 left-10"></i>
+                        <div class="bounding-box" style="top: 75px; left: 35px; width: 75px; height: 65px;">Car</div>
+
+                        <!-- Bicycle -->
+                        <i class="fas fa-bicycle text-6xl text-gray-500 absolute top-20 right-16"></i>
+                        <div class="bounding-box border-blue-400 text-blue-400 bg-blue-400/20" style="top: 75px; right: 55px; width: 85px; height: 65px;">Bike</div>
+                    </div>
+                    <div class="bg-indigo-600 px-6 py-2 rounded-full font-bold text-lg text-center">回傳座標 (Bounding Box)<br>與類別</div>
+                </div>
+                <div class="flex-1">
+                    <div class="text-indigo-400 text-xl font-bold mb-2">功能 02</div>
+                    <h1 class="slide-title text-left" style="font-size: 3rem;">物件偵測<br>(Object Detection)</h1>
+                    <p class="text-2xl text-gray-300 mb-8">「東西在哪裡？有多少個？」</p>
+
+                    <div class="bg-gray-800 p-6 rounded-xl border border-gray-700">
+                        <ul class="space-y-4 text-xl text-gray-300">
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-green-400 mt-1 mr-3"></i>
+                                <div>
+                                    <strong>識別位置：</strong> 回傳物件的邊界框座標 (X, Y, Width, Height)。
+                                </div>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-green-400 mt-1 mr-3"></i>
+                                <div>
+                                    <strong>計數：</strong> 計算圖片中有幾輛車、幾個人。
+                                </div>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-lightbulb text-yellow-400 mt-1 mr-3"></i>
+                                <div>
+                                    <strong>考題提示：</strong> 看到「Bounding Box (邊界框)」、「位置」、「座標」關鍵字，必選物件偵測。
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 5: Function - Semantic Segmentation -->
+        <div class="slide">
+            <div class="flex w-full max-w-6xl items-center gap-12">
+                <div class="flex-1">
+                    <div class="text-pink-400 text-xl font-bold mb-2">功能 03</div>
+                    <h1 class="slide-title text-left" style="font-size: 3rem;">語意分割<br>(Semantic Segmentation)</h1>
+                    <p class="text-2xl text-gray-300 mb-8">「以像素為單位的精確分類。」</p>
+
+                    <div class="bg-gray-800 p-6 rounded-xl border border-gray-700">
+                        <h3 class="text-xl font-bold mb-2 text-pink-300">核心概念</h3>
+                        <p class="text-lg text-gray-300 mb-4">不再是畫框框，而是將圖片中的<b>每一個像素 (Pixel)</b> 都歸類。</p>
+
+                        <div class="p-4 bg-gray-700/50 rounded-lg">
+                            <h4 class="font-bold text-white mb-2"><i class="fas fa-car-side mr-2"></i>常見應用：自動駕駛</h4>
+                            <p class="text-sm text-gray-300">
+                                像素 1-1000 = <span class="text-gray-400">道路 (Road)</span><br>
+                                像素 1001-1200 = <span class="text-blue-400">車輛 (Car)</span><br>
+                                像素 1201-1500 = <span class="text-green-400">天空 (Sky)</span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Visual -->
+                <div class="w-1/3 flex flex-col items-center">
+                    <div class="vision-box w-80 h-64 bg-gray-900 mb-4 relative overflow-hidden">
+                        <!-- Simulate Mask -->
+                        <div class="absolute bottom-0 w-full h-1/3 bg-gray-600 opacity-50 text-center text-xs text-white pt-2">Road Mask</div>
+                        <div class="absolute top-0 w-full h-1/2 bg-blue-900 opacity-30 text-center text-xs text-white pt-2">Sky Mask</div>
+                        <i class="fas fa-car text-6xl text-red-500 absolute bottom-10 left-10 opacity-80" style="filter: drop-shadow(0 0 5px red);"></i>
+                    </div>
+                    <div class="bg-pink-600 px-6 py-2 rounded-full font-bold text-lg">Pixel-level Mask (遮罩)</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 6: Function - OCR -->
+        <div class="slide">
+            <div class="flex w-full max-w-6xl items-center gap-12">
+                <div class="w-1/3 flex flex-col items-center">
+                    <div class="vision-box w-64 h-80 bg-white mb-4 relative text-black p-5 font-mono text-sm shadow-lg transform rotate-1 flex flex-col justify-between items-stretch">
+                        <!-- Header -->
+                        <div class="text-center border-b-2 border-black pb-3">
+                            <p class="font-bold text-2xl">RECEIPT</p>
+                            <p class="text-xs text-gray-500 mt-1">Store #1234</p>
+                        </div>
+
+                        <!-- Items (Middle) -->
+                        <div class="flex-1 flex flex-col justify-center space-y-3 py-2">
+                            <div class="flex justify-between border-b border-gray-300 pb-1 border-dashed">
+                                <span>Coffee</span><span>$4.50</span>
+                            </div>
+                            <div class="flex justify-between border-b border-gray-300 pb-1 border-dashed">
+                                <span>Sandwich</span><span>$8.50</span>
+                            </div>
+                            <div class="flex justify-between border-b border-gray-300 pb-1 border-dashed">
+                                <span>Water</span><span>$2.00</span>
+                            </div>
+                        </div>
+
+                        <!-- Footer (Bottom) -->
+                        <div class="border-t-2 border-black pt-3 mt-2">
+                            <div class="flex justify-between font-bold text-xl">
+                                <span>TOTAL</span><span>$15.00</span>
+                            </div>
+                            <p class="text-center text-xs text-gray-500 mt-2">Thank You!</p>
+                        </div>
+
+                        <!-- Scan effect -->
+                        <div class="absolute top-0 left-0 w-full h-1 bg-green-500 shadow-[0_0_15px_rgba(34,197,94,0.8)] animate-pulse" style="animation: scan 2s linear infinite;"></div>
+                    </div>
+                </div>
+                <div class="flex-1">
+                    <div class="text-green-400 text-xl font-bold mb-2">功能 04</div>
+                    <h1 class="slide-title text-left" style="font-size: 3rem;">光學字元辨識<br>(OCR)</h1>
+                    <p class="text-2xl text-gray-300 mb-8">「讀取圖片中的文字。」</p>
+
+                    <div class="space-y-4 text-xl text-gray-300">
+                        <div class="p-4 bg-gray-800 rounded-lg border-l-4 border-green-500">
+                            <h3 class="font-bold text-white">Read API</h3>
+                            <p>Azure 最新的 OCR 技術，能夠讀取：</p>
+                            <ul class="list-disc list-inside mt-2 ml-4 text-base text-gray-400">
+                                <li>印刷體</li>
+                                <li>手寫體</li>
+                                <li>多種語言與混合語言</li>
+                            </ul>
+                        </div>
+                        <div class="p-4 bg-gray-800 rounded-lg">
+                            <h3 class="font-bold text-white mb-2">應用場景</h3>
+                            <p class="text-base">數位化紙本文件、讀取路牌、車牌辨識。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 7: Function - Face Analysis -->
+        <div class="slide">
+            <div class="flex w-full max-w-6xl items-center gap-12">
+                <div class="flex-1">
+                    <div class="text-orange-400 text-xl font-bold mb-2">功能 05</div>
+                    <h1 class="slide-title text-left" style="font-size: 3rem;">臉部偵測與辨識<br>(Face Analysis)</h1>
+                    <p class="text-2xl text-gray-300 mb-8">「偵測人臉、分析屬性、識別身分。」</p>
+
+                    <div class="grid grid-cols-1 gap-4">
+                        <div class="concept-card border-orange-500/30">
+                            <h3 class="text-xl font-bold text-orange-300"><i class="fas fa-expand mr-2"></i> 臉部偵測</h3>
+                            <p class="text-gray-400">回傳人臉的座標框。</p>
+                        </div>
+                        <div class="concept-card border-orange-500/30">
+                            <h3 class="text-xl font-bold text-orange-300"><i class="fas fa-smile mr-2"></i> 屬性分析</h3>
+                            <p class="text-gray-400">分析年齡、情緒 (開心/生氣)、是否有戴眼鏡、口罩、化妝等。</p>
+                        </div>
+                        <div class="concept-card border-orange-500/30">
+                            <h3 class="text-xl font-bold text-orange-300"><i class="fas fa-id-badge mr-2"></i> 臉部識別/驗證</h3>
+                            <p class="text-gray-400">這張臉是「張三」嗎？(驗證)；這張臉是誰？(識別)。</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="w-1/3 flex justify-center">
+                    <div class="relative">
+                        <i class="fas fa-user-circle text-[15rem] text-orange-500 opacity-80"></i>
+                        <div class="absolute top-10 right-10 bg-white text-black text-xs font-bold px-2 py-1 rounded shadow">Age: 25</div>
+                        <div class="absolute top-20 right-10 bg-white text-black text-xs font-bold px-2 py-1 rounded shadow">Emotion: Happy</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 8: Services Intro -->
+        <div class="slide">
+            <div class="text-center">
+                <div class="mb-6 inline-block p-4 rounded-full bg-blue-600 bg-opacity-20 border border-blue-400">
+                    <i class="fas fa-cloud text-6xl text-blue-400"></i>
+                </div>
+                <h1 class="slide-title" style="font-size: 4rem;">Azure 電腦視覺服務</h1>
+                <p class="text-3xl text-gray-300 mt-4">如何選擇正確的服務？</p>
+                <div class="mt-8 grid grid-cols-2 gap-6 max-w-4xl mx-auto text-left">
+                    <div class="p-4 bg-gray-800 rounded border border-gray-600 hover:border-blue-500">
+                        <span class="text-blue-400 font-bold block mb-1">1. Azure AI 視覺</span>
+                        <span class="text-sm text-gray-400">通用型：預先訓練好的模型，直接用。</span>
+                    </div>
+                    <div class="p-4 bg-gray-800 rounded border border-gray-600 hover:border-green-500">
+                        <span class="text-green-400 font-bold block mb-1">2. 自訂視覺</span>
+                        <span class="text-sm text-gray-400">客製化：用「自己的照片」訓練模型。</span>
+                    </div>
+                    <div class="p-4 bg-gray-800 rounded border border-gray-600 hover:border-orange-500">
+                        <span class="text-orange-400 font-bold block mb-1">3. 臉部服務</span>
+                        <span class="text-sm text-gray-400">專業人臉：更進階的人臉辨識與驗證。</span>
+                    </div>
+                    <div class="p-4 bg-gray-800 rounded border border-gray-600 hover:border-pink-500">
+                        <span class="text-pink-400 font-bold block mb-1">4. 文件智慧</span>
+                        <span class="text-sm text-gray-400">文件專用：從表格、發票中提取結構化資料。</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 9: Service - Azure AI Vision -->
+        <div class="slide">
+            <div class="flex w-full max-w-6xl items-center gap-12">
+                <div class="w-1/3 flex justify-center">
+                    <i class="fas fa-globe text-[15rem] text-blue-500 opacity-80"></i>
+                </div>
+                <div class="flex-1">
+                    <div class="text-blue-400 text-xl font-bold mb-2">服務 01</div>
+                    <h1 class="slide-title text-left">Azure AI Vision</h1>
+                    <p class="text-xl text-gray-400 mb-8">(舊稱 Computer Vision)</p>
+
+                    <div class="bg-gray-800 p-8 rounded-xl border-l-4 border-blue-500">
+                        <h3 class="text-2xl font-bold mb-4 text-white">特點：預先訓練 (Pre-trained)</h3>
+                        <p class="text-xl text-gray-300 mb-6">你不需要自己訓練模型，微軟已經訓練好了。</p>
+
+                        <h4 class="font-bold text-blue-300 mb-2">主要功能：</h4>
+                        <ul class="list-disc list-inside space-y-2 text-lg text-gray-300">
+                            <li><strong>分析影像：</strong> 產生描述、標籤、偵測物件。</li>
+                            <li><strong>OCR (Read)：</strong> 讀取圖片中的文字。</li>
+                            <li><strong>縮圖生成：</strong> 智慧裁切 產生縮圖。</li>
+                        </ul>
+                        <div class="mt-4 p-3 bg-blue-900/30 rounded text-sm text-blue-200">
+                            <i class="fas fa-question-circle mr-1"></i> <strong>考題：</strong> 「為圖片產生自動描述」、「讀取路牌文字」 → 選 Azure AI Vision。
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 10: Service - Custom Vision -->
+        <div class="slide">
+            <div class="flex w-full max-w-6xl items-center gap-12">
+                <div class="flex-1">
+                    <div class="text-green-400 text-xl font-bold mb-2">服務 02</div>
+                    <h1 class="slide-title text-left">Custom Vision<br>(自訂視覺)</h1>
+                    <p class="text-xl text-gray-400 mb-8">「訓練你自己的模型」</p>
+
+                    <div class="bg-gray-800 p-8 rounded-xl border-l-4 border-green-500">
+                        <h3 class="text-2xl font-bold mb-4 text-white">特點：自帶數據 (Bring Your Own Data)</h3>
+                        <p class="text-xl text-gray-300 mb-6">當 Azure AI Vision 無法識別你的特殊物件時使用。</p>
+
+                        <div class="grid grid-cols-2 gap-4 mb-4">
+                            <div class="p-4 bg-gray-700 rounded">
+                                <h4 class="font-bold text-green-300">1. 上傳圖片</h4>
+                                <p class="text-sm">例如：公司特定的產品零件。</p>
+                            </div>
+                            <div class="p-4 bg-gray-700 rounded">
+                                <h4 class="font-bold text-green-300">2. 標記 (Label)</h4>
+                                <p class="text-sm">手動框出零件位置或分類。</p>
+                            </div>
+                            <div class="p-4 bg-gray-700 rounded">
+                                <h4 class="font-bold text-green-300">3. 訓練 (Train)</h4>
+                                <p class="text-sm">雲端自動訓練。</p>
+                            </div>
+                            <div class="p-4 bg-gray-700 rounded">
+                                <h4 class="font-bold text-green-300">4. 預測 (Predict)</h4>
+                                <p class="text-sm">發佈 API 進行預測。</p>
+                            </div>
+                        </div>
+
+                        <div class="p-3 bg-green-900/30 rounded text-sm text-green-200">
+                            <i class="fas fa-question-circle mr-1"></i> <strong>考題：</strong> 「識別特定的花種」、「分辨自家產品是否有瑕疵」 → 選 Custom Vision。
+                        </div>
+                    </div>
+                </div>
+                <div class="w-1/3 flex justify-center">
+                    <i class="fas fa-tools text-[15rem] text-green-500 opacity-80"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 11: Service - Face API -->
+        <div class="slide">
+            <div class="flex w-full max-w-6xl items-center gap-12">
+                <div class="w-1/3 flex justify-center">
+                    <i class="fas fa-id-card text-[15rem] text-orange-500 opacity-80"></i>
+                </div>
+                <div class="flex-1">
+                    <div class="text-orange-400 text-xl font-bold mb-2">服務 03</div>
+                    <h1 class="slide-title text-left">Face API</h1>
+                    <p class="text-xl text-gray-400 mb-8">專門處理人臉的高階服務</p>
+
+                    <div class="bg-gray-800 p-8 rounded-xl border-l-4 border-orange-500">
+                        <div class="space-y-4">
+                            <div>
+                                <h3 class="font-bold text-orange-300 text-xl">與 Azure AI Vision 的區別？</h3>
+                                <p class="text-gray-300 mt-2">Azure AI Vision 可以做基本的「臉部偵測」(哪裡有臉)，但 <strong>Face API</strong> 提供更深入的功能：</p>
+                            </div>
+
+                            <ul class="list-disc list-inside space-y-2 text-lg text-gray-300">
+                                <li><strong>臉部驗證 (Verification)：</strong> 1對1 比對，確認是不是同一個人 (如手機解鎖)。</li>
+                                <li><strong>臉部識別 (Identification)：</strong> 1對多 搜尋，從資料庫中找出這個人是誰。</li>
+                                <li><strong>相似臉部搜尋 (Find Similar)：</strong> 找出長得像的人。</li>
+                                <li><strong>分組 (Grouping)：</strong> 將相似的臉分在同一組。</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 12: Service - Form Recognizer -->
+        <div class="slide">
+            <div class="flex w-full max-w-6xl items-center gap-12">
+                <div class="flex-1">
+                    <div class="text-pink-400 text-xl font-bold mb-2">服務 04</div>
+                    <h1 class="slide-title text-left">Form Recognizer<br>(Document Intelligence)</h1>
+                    <p class="text-xl text-gray-400 mb-8">文件智慧服務：從文件中提取結構化資料。</p>
+
+                    <div class="bg-gray-800 p-8 rounded-xl border-l-4 border-pink-500">
+                        <h3 class="text-2xl font-bold mb-4 text-white">關鍵字：鍵值對 (Key-Value Pairs)</h3>
+                        <p class="text-xl text-gray-300 mb-6">它不僅僅是讀取文字 (OCR)，還能理解文件的「結構」。</p>
+
+                        <div class="grid grid-cols-2 gap-6">
+                            <div class="bg-gray-700 p-4 rounded-lg">
+                                <h4 class="font-bold text-pink-300 mb-2">能提取什麼？</h4>
+                                <ul class="text-sm text-gray-300 space-y-1">
+                                    <li>表格 (Tables)</li>
+                                    <li>選取方塊 (Selection marks)</li>
+                                    <li>鍵值對 (Key: Value)</li>
+                                </ul>
+                            </div>
+                            <div class="bg-gray-700 p-4 rounded-lg">
+                                <h4 class="font-bold text-pink-300 mb-2">常見預建模型</h4>
+                                <ul class="text-sm text-gray-300 space-y-1">
+                                    <li>發票 (Invoices)</li>
+                                    <li>收據 (Receipts)</li>
+                                    <li>名片 (Business Cards)</li>
+                                    <li>身分證件 (ID Cards)</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="mt-4 p-3 bg-pink-900/30 rounded text-sm text-pink-200">
+                            <i class="fas fa-exclamation-triangle mr-1"></i> <strong>注意：</strong> 題目若提到「自動化處理收據」、「提取發票金額」 → 必選 Form Recognizer。
+                        </div>
+                    </div>
+                </div>
+                <div class="w-1/3 flex justify-center">
+                    <i class="fas fa-file-invoice-dollar text-[15rem] text-pink-500 opacity-80"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 13: Summary / Quiz -->
+        <div class="slide">
+            <h1 class="slide-title mb-8">考前速記：情境對應</h1>
+            <div class="grid grid-cols-2 gap-8 w-full max-w-5xl">
+                <!-- Scenario 1 -->
+                <div class="concept-card flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-400 text-sm">情境</p>
+                        <p class="text-xl font-bold">這是一張貓的照片嗎？</p>
+                    </div>
+                    <i class="fas fa-arrow-right text-gray-500"></i>
+                    <div class="text-right">
+                        <p class="text-gray-400 text-sm">功能/服務</p>
+                        <p class="text-xl text-purple-400 font-bold">影像分類 / Vision</p>
+                    </div>
+                </div>
+
+                <!-- Scenario 2 -->
+                <div class="concept-card flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-400 text-sm">情境</p>
+                        <p class="text-xl font-bold">找出自家生產的瑕疵零件</p>
+                    </div>
+                    <i class="fas fa-arrow-right text-gray-500"></i>
+                    <div class="text-right">
+                        <p class="text-gray-400 text-sm">功能/服務</p>
+                        <p class="text-xl text-green-400 font-bold">Custom Vision</p>
+                    </div>
+                </div>
+
+                <!-- Scenario 3 -->
+                <div class="concept-card flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-400 text-sm">情境</p>
+                        <p class="text-xl font-bold">從掃描的收據自動填入報銷單</p>
+                    </div>
+                    <i class="fas fa-arrow-right text-gray-500"></i>
+                    <div class="text-right">
+                        <p class="text-gray-400 text-sm">功能/服務</p>
+                        <p class="text-xl text-pink-400 font-bold">Form Recognizer</p>
+                    </div>
+                </div>
+
+                <!-- Scenario 4 -->
+                <div class="concept-card flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-400 text-sm">情境</p>
+                        <p class="text-xl font-bold">門禁系統確認員工身分</p>
+                    </div>
+                    <i class="fas fa-arrow-right text-gray-500"></i>
+                    <div class="text-right">
+                        <p class="text-gray-400 text-sm">功能/服務</p>
+                        <p class="text-xl text-orange-400 font-bold">Face API</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 14: End -->
+        <div class="slide">
+            <div class="text-center">
+                <i class="fas fa-check-circle text-8xl text-green-500 mb-8"></i>
+                <h1 class="slide-title">電腦視覺單元結束</h1>
+                <p class="text-2xl text-gray-400 mb-12">下一站：自然語言處理 (NLP)</p>
+                <button onclick="location.reload()" class="px-8 py-3 bg-purple-600 hover:bg-purple-700 rounded-full text-xl font-bold transition">
+                    <i class="fas fa-redo mr-2"></i> 重新複習
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const progressBar = document.getElementById('progressBar');
+        const slideNumber = document.getElementById('slideNumber');
+        const totalSlides = slides.length;
+
+        function updateSlideUI() {
+            slides.forEach((slide, index) => {
+                slide.classList.remove('active', 'prev');
+                if (index === currentSlide) {
+                    slide.classList.add('active');
+                } else if (index < currentSlide) {
+                    slide.classList.add('prev');
+                }
+            });
+
+            // Update Progress Bar
+            const progress = ((currentSlide + 1) / totalSlides) * 100;
+            progressBar.style.width = `${progress}%`;
+            slideNumber.innerText = `${currentSlide + 1} / ${totalSlides}`;
+        }
+
+        function changeSlide(direction) {
+            const nextSlide = currentSlide + direction;
+            if (nextSlide >= 0 && nextSlide < totalSlides) {
+                currentSlide = nextSlide;
+                updateSlideUI();
+            }
+        }
+
+        // Keyboard Navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                changeSlide(1);
+            } else if (e.key === 'ArrowLeft') {
+                changeSlide(-1);
+            }
+        });
+
+        // Initialize
+        updateSlideUI();
+    </script>
+</body>
+</html>

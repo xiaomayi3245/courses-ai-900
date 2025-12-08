@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI-900 簡報：AI 核心概念與負責任 AI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&display=swap');
+
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            margin: 0;
+            overflow: hidden;
+            background-color: #1a202c;
+            color: white;
+        }
+
+        .slide-container {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+        }
+
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transform: translateX(100%);
+            transition: all 0.6s ease-in-out;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            z-index: 1;
+        }
+
+        .slide.active {
+            opacity: 1;
+            transform: translateX(0);
+            z-index: 10;
+        }
+
+        .slide.prev {
+            opacity: 0;
+            transform: translateX(-100%);
+            z-index: 1;
+        }
+
+        /* Slide Content Styles */
+        .slide-title {
+            font-size: 3.5rem;
+            font-weight: 900;
+            margin-bottom: 2rem;
+            text-align: center;
+            background: linear-gradient(to right, #60a5fa, #a78bfa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1.2;
+        }
+
+        .slide-content {
+            font-size: 1.8rem;
+            max-width: 80%;
+            line-height: 1.6;
+        }
+
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            width: 100%;
+            max-width: 1200px;
+        }
+
+        .concept-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: transform 0.3s;
+        }
+
+        .concept-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        /* Navigation Buttons */
+        .nav-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: none;
+            padding: 1rem;
+            cursor: pointer;
+            z-index: 100;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.3s;
+        }
+
+        .nav-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .prev-btn { left: 2rem; }
+        .next-btn { right: 2rem; }
+
+        /* Progress Bar */
+        .progress-bar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 6px;
+            background: linear-gradient(to right, #3b82f6, #8b5cf6);
+            z-index: 100;
+            transition: width 0.3s;
+        }
+
+        .slide-number {
+            position: absolute;
+            bottom: 1.5rem;
+            right: 2rem;
+            font-size: 1rem;
+            color: rgba(255,255,255,0.5);
+            z-index: 100;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li {
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+        }
+
+        li i {
+            margin-right: 1rem;
+            color: #60a5fa;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="slide-container">
+
+        <!-- Navigation -->
+        <button class="nav-btn prev-btn" onclick="changeSlide(-1)"><i class="fas fa-chevron-left text-2xl"></i></button>
+        <button class="nav-btn next-btn" onclick="changeSlide(1)"><i class="fas fa-chevron-right text-2xl"></i></button>
+        <div class="progress-bar" id="progressBar"></div>
+        <div class="slide-number" id="slideNumber">1 / 14</div>
+
+        <!-- Slide 1: Title -->
+        <div class="slide active">
+            <div class="text-center">
+                <div class="mb-6 inline-block p-4 rounded-full bg-blue-600 bg-opacity-20 border border-blue-400">
+                    <i class="fas fa-brain text-6xl text-blue-400"></i>
+                </div>
+                <h1 class="slide-title">AI-900 重點整理</h1>
+                <h2 class="text-3xl text-gray-300 font-light">AI 核心概念 與 負責任 AI</h2>
+                <div class="mt-12 text-xl text-gray-400">
+                    <p>Microsoft Azure AI Fundamentals 考前速讀</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 2: Agenda -->
+        <div class="slide">
+            <h1 class="slide-title">本章節兩大重點</h1>
+            <div class="flex flex-col md:flex-row gap-8 w-full max-w-5xl">
+                <div class="flex-1 bg-gradient-to-br from-blue-900 to-slate-800 p-8 rounded-2xl border border-blue-500/30">
+                    <div class="text-blue-400 text-5xl mb-4"><i class="fas fa-microchip"></i></div>
+                    <h3 class="text-3xl font-bold mb-4">1. 常見 AI 工作負載</h3>
+                    <ul class="text-xl text-gray-300 space-y-3">
+                        <li><i class="fas fa-check"></i> 機器學習 (預測)</li>
+                        <li><i class="fas fa-check"></i> 異常偵測</li>
+                        <li><i class="fas fa-check"></i> 電腦視覺</li>
+                        <li><i class="fas fa-check"></i> 自然語言處理 (NLP)</li>
+                        <li><i class="fas fa-check"></i> 交談式 AI</li>
+                    </ul>
+                </div>
+                <div class="flex-1 bg-gradient-to-br from-purple-900 to-slate-800 p-8 rounded-2xl border border-purple-500/30">
+                    <div class="text-purple-400 text-5xl mb-4"><i class="fas fa-balance-scale"></i></div>
+                    <h3 class="text-3xl font-bold mb-4">2. 負責任 AI 原則</h3>
+                    <ul class="text-xl text-gray-300 space-y-3">
+                        <li><i class="fas fa-check"></i> 公平性</li>
+                        <li><i class="fas fa-check"></i> 可靠性與安全性</li>
+                        <li><i class="fas fa-check"></i> 隱私權與安全性</li>
+                        <li><i class="fas fa-check"></i> 包容性</li>
+                        <li><i class="fas fa-check"></i> 透明度</li>
+                        <li><i class="fas fa-check"></i> 權責性</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 3: Workload - ML -->
+        <div class="slide">
+            <div class="flex w-full max-w-6xl items-center gap-12">
+                <div class="flex-1">
+                    <div class="text-blue-400 text-xl font-bold mb-2">工作負載 01</div>
+                    <h1 class="slide-title text-left">機器學習 (Machine Learning)</h1>
+                    <p class="text-2xl text-gray-300 mb-8">基於數學與統計學，讓電腦從資料中學習並做出預測。</p>
+
+                    <div class="bg-slate-800 p-6 rounded-xl border-l-4 border-blue-500">
+                        <h3 class="text-2xl font-bold mb-4 text-white">常見三大類型 (考題必出)</h3>
+                        <ul class="text-xl space-y-4">
+                            <li>
+                                <div class="flex flex-col">
+                                    <span class="font-bold text-blue-300">1. 迴歸 (Regression)</span>
+                                    <span class="text-gray-400 text-base">預測「數值」。例如：預測房價、氣溫、銷售量。</span>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="flex flex-col">
+                                    <span class="font-bold text-blue-300">2. 分類 (Classification)</span>
+                                    <span class="text-gray-400 text-base">預測「類別/標籤」。例如：是否為垃圾郵件(二元)、辨識圖片是貓是狗(多元)。</span>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="flex flex-col">
+                                    <span class="font-bold text-blue-300">3. 叢集 (Clustering)</span>
+                                    <span class="text-gray-400 text-base">將相似的資料「分組」。例如：依消費習慣將客戶分群 (非監督式)。</span>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="w-1/3 flex justify-center">
+                    <i class="fas fa-chart-line text-[15rem] text-blue-500 opacity-80"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 4: Workload - Anomaly Detection -->
+        <div class="slide">
+            <div class="flex w-full max-w-6xl items-center gap-12">
+                <div class="w-1/3 flex justify-center">
+                    <i class="fas fa-exclamation-triangle text-[15rem] text-red-500 opacity-80 animate-pulse"></i>
+                </div>
+                <div class="flex-1">
+                    <div class="text-red-400 text-xl font-bold mb-2">工作負載 02</div>
+                    <h1 class="slide-title text-left">異常偵測 (Anomaly Detection)</h1>
+                    <p class="text-2xl text-gray-300 mb-8">識別與預期模式不符的罕見事件或觀察結果。</p>
+
+                    <div class="grid grid-cols-1 gap-4">
+                        <div class="concept-card bg-red-900/20 border-red-500/30">
+                            <h3 class="text-xl font-bold mb-2 text-red-300"><i class="fas fa-credit-card mr-2"></i>金融應用</h3>
+                            <p class="text-gray-300">偵測信用卡盜刷、詐欺交易。</p>
+                        </div>
+                        <div class="concept-card bg-red-900/20 border-red-500/30">
+                            <h3 class="text-xl font-bold mb-2 text-red-300"><i class="fas fa-server mr-2"></i>系統監控</h3>
+                            <p class="text-gray-300">網站流量異常 (DDoS 攻擊)、工廠機器溫度異常。</p>
+                        </div>
+                    </div>
+                    <div class="mt-6 p-4 bg-gray-800 rounded border border-gray-600">
+                        <span class="font-bold text-yellow-400">關鍵字提示：</span>
+                        <span class="text-gray-300">「不尋常」、「偏差」、「Spike (峰值)」、「罕見」。</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 5: Workload - Computer Vision -->
+        <div class="slide">
+             <div class="flex w-full max-w-6xl items-center gap-12">
+                <div class="flex-1">
+                    <div class="text-purple-400 text-xl font-bold mb-2">工作負載 03</div>
+                    <h1 class="slide-title text-left">電腦視覺 (Computer Vision)</h1>
+                    <p class="text-2xl text-gray-300 mb-8">使應用程式能夠「看見」、解讀與分析影像或影片。</p>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="concept-card">
+                            <h4 class="font-bold text-purple-300">影像分類</h4>
+                            <p class="text-sm text-gray-400">這張圖是什麼？(貓/狗/車)</p>
+                        </div>
+                        <div class="concept-card">
+                            <h4 class="font-bold text-purple-300">物件偵測</h4>
+                            <p class="text-sm text-gray-400">東西在「哪裡」？(傳回座標框)</p>
+                        </div>
+                        <div class="concept-card">
+                            <h4 class="font-bold text-purple-300">OCR (光學字元辨識)</h4>
+                            <p class="text-sm text-gray-400">讀取圖片中的文字 (收據、路牌)。</p>
+                        </div>
+                        <div class="concept-card">
+                            <h4 class="font-bold text-purple-300">臉部偵測/分析</h4>
+                            <p class="text-sm text-gray-400">這有人臉嗎？年齡？情緒？</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="w-1/3 flex justify-center relative">
+                    <i class="fas fa-eye text-[15rem] text-purple-500 opacity-80"></i>
+                    <i class="fas fa-expand absolute top-10 right-10 text-4xl text-white animate-ping"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 6: Workload - NLP -->
+        <div class="slide">
+            <div class="flex w-full max-w-6xl items-center gap-12">
+                <div class="w-1/3 flex justify-center">
+                    <i class="fas fa-comments text-[15rem] text-yellow-500 opacity-80"></i>
+                </div>
+                <div class="flex-1">
+                    <div class="text-yellow-400 text-xl font-bold mb-2">工作負載 04</div>
+                    <h1 class="slide-title text-left">自然語言處理 (NLP)</h1>
+                    <p class="text-2xl text-gray-300 mb-8">讓電腦理解、分析與生成人類語言 (文字或語音)。</p>
+
+                    <ul class="space-y-4 text-xl">
+                        <li class="bg-slate-800 p-4 rounded-lg"><i class="fas fa-heart text-pink-500"></i> <strong>情感分析 (Sentiment Analysis)：</strong> 判斷評論是正面、負面還是中立。</li>
+                        <li class="bg-slate-800 p-4 rounded-lg"><i class="fas fa-language text-blue-400"></i> <strong>翻譯 (Translation)：</strong> 跨語言溝通。</li>
+                        <li class="bg-slate-800 p-4 rounded-lg"><i class="fas fa-tag text-green-400"></i> <strong>實體辨識 (NER)：</strong> 從文章中抓出人名、地點、日期、公司名。</li>
+                        <li class="bg-slate-800 p-4 rounded-lg"><i class="fas fa-microphone text-gray-400"></i> <strong>語音辨識與合成：</strong> 語音轉文字 (STT) / 文字轉語音 (TTS)。</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 7: Workload - Conversational AI -->
+        <div class="slide">
+             <div class="flex w-full max-w-6xl items-center gap-12">
+                <div class="flex-1">
+                    <div class="text-indigo-400 text-xl font-bold mb-2">工作負載 05</div>
+                    <h1 class="slide-title text-left">交談式 AI (Conversational AI)</h1>
+                    <p class="text-2xl text-gray-300 mb-8">透過對話與使用者互動的 AI 代理人 (Agent)。</p>
+
+                    <div class="bg-indigo-900/30 border border-indigo-500/50 p-8 rounded-2xl">
+                        <h3 class="text-3xl font-bold mb-6 text-indigo-300">常見應用</h3>
+                        <div class="flex gap-4">
+                            <div class="flex-1 text-center p-4 bg-slate-800 rounded-xl">
+                                <i class="fas fa-robot text-5xl mb-3 text-indigo-400"></i>
+                                <h4 class="font-bold text-xl">聊天機器人</h4>
+                                <p class="text-sm text-gray-400 mt-2">Web Chatbots<br>客服問答</p>
+                            </div>
+                            <div class="flex-1 text-center p-4 bg-slate-800 rounded-xl">
+                                <i class="fas fa-headset text-5xl mb-3 text-indigo-400"></i>
+                                <h4 class="font-bold text-xl">語音助理</h4>
+                                <p class="text-sm text-gray-400 mt-2">Siri, Cortana<br>智慧音箱</p>
+                            </div>
+                        </div>
+                        <div class="mt-6 p-4 bg-yellow-900/40 rounded border border-yellow-600/50 text-yellow-200 text-sm">
+                            <i class="fas fa-lightbulb mr-2"></i> <strong>考試陷阱：</strong> 雖然聊天機器人用到 NLP 技術，但若題目強調「與使用者對話互動的介面」，答案通常是「交談式 AI」。
+                        </div>
+                    </div>
+                </div>
+                <div class="w-1/3 flex justify-center">
+                    <i class="fas fa-comment-dots text-[15rem] text-indigo-500 opacity-80"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 8: Responsible AI Intro -->
+        <div class="slide">
+            <div class="text-center max-w-4xl">
+                <h1 class="slide-title mb-8" style="font-size: 4rem;">Microsoft 負責任 AI</h1>
+                <p class="text-3xl text-gray-300 mb-12">隨著 AI 越來越強大，我們必須確保它合乎道德且值得信賴。</p>
+                <div class="grid grid-cols-3 gap-6 text-left">
+                    <div class="p-4 bg-slate-800 rounded border-l-4 border-blue-500">1. 公平性</div>
+                    <div class="p-4 bg-slate-800 rounded border-l-4 border-green-500">2. 可靠性與安全性</div>
+                    <div class="p-4 bg-slate-800 rounded border-l-4 border-purple-500">3. 隱私權與安全性</div>
+                    <div class="p-4 bg-slate-800 rounded border-l-4 border-orange-500">4. 包容性</div>
+                    <div class="p-4 bg-slate-800 rounded border-l-4 border-cyan-500">5. 透明度</div>
+                    <div class="p-4 bg-slate-800 rounded border-l-4 border-red-500">6. 權責性</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 9: Principle - Fairness -->
+        <div class="slide">
+            <div class="flex w-full max-w-5xl items-center gap-12">
+                <div class="w-1/3 flex justify-center">
+                    <i class="fas fa-balance-scale text-[15rem] text-blue-500 opacity-80"></i>
+                </div>
+                <div class="flex-1">
+                    <div class="text-blue-400 text-xl font-bold mb-2">原則 01</div>
+                    <h1 class="slide-title text-left">公平性 (Fairness)</h1>
+                    <p class="text-3xl text-gray-300 mb-8 font-light">AI 系統應公平對待所有人。</p>
+
+                    <div class="space-y-6 text-xl">
+                        <div class="p-6 bg-slate-800 rounded-xl">
+                            <h3 class="font-bold text-blue-300 mb-2">核心概念</h3>
+                            <p>不應基於種族、性別、年齡、國籍或宗教信仰而產生歧視或偏差。</p>
+                        </div>
+                        <div class="p-6 bg-slate-800 rounded-xl">
+                            <h3 class="font-bold text-green-300 mb-2"><i class="fas fa-check-circle"></i> 考題範例</h3>
+                            <p>銀行貸款審核系統，對於信用條件相同的男性與女性，應給予相同的核准結果。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 10: Principle - Reliability -->
+        <div class="slide">
+             <div class="flex w-full max-w-5xl items-center gap-12">
+                <div class="flex-1">
+                    <div class="text-green-400 text-xl font-bold mb-2">原則 02</div>
+                    <h1 class="slide-title text-left">可靠性與安全性<br><span class="text-4xl">(Reliability & Safety)</span></h1>
+                    <p class="text-3xl text-gray-300 mb-8 font-light">AI 應能可靠且安全地運作。</p>
+
+                    <div class="space-y-6 text-xl">
+                        <div class="p-6 bg-slate-800 rounded-xl">
+                            <h3 class="font-bold text-green-300 mb-2">核心概念</h3>
+                            <p>系統必須在原設計的參數內運作，並能安全地處理未預期的狀況 (Fail-safe)。</p>
+                        </div>
+                        <div class="p-6 bg-slate-800 rounded-xl">
+                            <h3 class="font-bold text-blue-300 mb-2"><i class="fas fa-check-circle"></i> 考題範例</h3>
+                            <p>自動駕駛汽車即使在惡劣天氣或感測器故障時，也能安全地停靠路邊，不造成傷害。</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="w-1/3 flex justify-center">
+                    <i class="fas fa-shield-alt text-[15rem] text-green-500 opacity-80"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 11: Principle - Privacy -->
+        <div class="slide">
+            <div class="flex w-full max-w-5xl items-center gap-12">
+                <div class="w-1/3 flex justify-center">
+                    <i class="fas fa-user-lock text-[15rem] text-purple-500 opacity-80"></i>
+                </div>
+                <div class="flex-1">
+                    <div class="text-purple-400 text-xl font-bold mb-2">原則 03</div>
+                    <h1 class="slide-title text-left">隱私權與安全性<br><span class="text-4xl">(Privacy & Security)</span></h1>
+                    <p class="text-3xl text-gray-300 mb-8 font-light">AI 系統應安全並尊重隱私。</p>
+
+                    <div class="space-y-6 text-xl">
+                        <div class="p-6 bg-slate-800 rounded-xl">
+                            <h3 class="font-bold text-purple-300 mb-2">核心概念</h3>
+                            <p>資料收集應透明，個資應受保護，且只有授權人員能存取資料。</p>
+                        </div>
+                        <div class="p-6 bg-slate-800 rounded-xl">
+                            <h3 class="font-bold text-blue-300 mb-2"><i class="fas fa-check-circle"></i> 考題範例</h3>
+                            <p>醫療 AI 在訓練模型時，必須將病歷資料進行「去識別化 (De-identification)」，移除姓名與身分證號。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 12: Principle - Inclusiveness -->
+        <div class="slide">
+             <div class="flex w-full max-w-5xl items-center gap-12">
+                <div class="flex-1">
+                    <div class="text-orange-400 text-xl font-bold mb-2">原則 04</div>
+                    <h1 class="slide-title text-left">包容性 (Inclusiveness)</h1>
+                    <p class="text-3xl text-gray-300 mb-8 font-light">AI 應賦予每個人能力，不遺漏任何群體。</p>
+
+                    <div class="space-y-6 text-xl">
+                        <div class="p-6 bg-slate-800 rounded-xl">
+                            <h3 class="font-bold text-orange-300 mb-2">核心概念</h3>
+                            <p>設計時應考量所有人類能力與背景，包含身心障礙人士。</p>
+                        </div>
+                        <div class="p-6 bg-slate-800 rounded-xl">
+                            <h3 class="font-bold text-blue-300 mb-2"><i class="fas fa-check-circle"></i> 考題範例</h3>
+                            <p>應用程式提供「語音轉文字」功能給聽障人士，或提供「螢幕閱讀器」支援給視障人士。</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="w-1/3 flex justify-center">
+                    <i class="fas fa-users text-[15rem] text-orange-500 opacity-80"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 13: Principle - Transparency -->
+        <div class="slide">
+            <div class="flex w-full max-w-5xl items-center gap-12">
+                <div class="w-1/3 flex justify-center">
+                    <i class="fas fa-search text-[15rem] text-cyan-500 opacity-80"></i>
+                </div>
+                <div class="flex-1">
+                    <div class="text-cyan-400 text-xl font-bold mb-2">原則 05</div>
+                    <h1 class="slide-title text-left">透明度 (Transparency)</h1>
+                    <p class="text-3xl text-gray-300 mb-8 font-light">AI 系統應是可以理解的 (Understandable)。</p>
+
+                    <div class="space-y-6 text-xl">
+                        <div class="p-6 bg-slate-800 rounded-xl">
+                            <h3 class="font-bold text-cyan-300 mb-2">核心概念</h3>
+                            <p>使用者應知道他們正在與 AI 互動，且系統的決策過程應具備「可解釋性 (Explainability)」。</p>
+                        </div>
+                        <div class="p-6 bg-slate-800 rounded-xl">
+                            <h3 class="font-bold text-blue-300 mb-2"><i class="fas fa-check-circle"></i> 考題範例</h3>
+                            <p>當 AI 拒絕某人的貸款申請時，必須能夠解釋「為什麼」被拒絕 (例如：因為收入不足，而非因為住址)。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 14: Principle - Accountability -->
+        <div class="slide">
+             <div class="flex w-full max-w-5xl items-center gap-12">
+                <div class="flex-1">
+                    <div class="text-red-400 text-xl font-bold mb-2">原則 06</div>
+                    <h1 class="slide-title text-left">權責性 (Accountability)</h1>
+                    <p class="text-3xl text-gray-300 mb-8 font-light">人類應對 AI 系統負責。</p>
+
+                    <div class="space-y-6 text-xl">
+                        <div class="p-6 bg-slate-800 rounded-xl">
+                            <h3 class="font-bold text-red-300 mb-2">核心概念</h3>
+                            <p>設計與部署 AI 的人員必須對系統的運作方式及其後果負責。AI 不能成為推卸責任的藉口。</p>
+                        </div>
+                        <div class="p-6 bg-slate-800 rounded-xl">
+                            <h3 class="font-bold text-blue-300 mb-2"><i class="fas fa-check-circle"></i> 考題範例</h3>
+                            <p>公司必須建立內部治理框架，確保開發團隊遵循道德準則，並對 AI 造成的錯誤結果負責。</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="w-1/3 flex justify-center">
+                    <i class="fas fa-gavel text-[15rem] text-red-500 opacity-80"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 15: End -->
+        <div class="slide">
+            <div class="text-center">
+                <i class="fas fa-flag-checkered text-8xl text-yellow-500 mb-8"></i>
+                <h1 class="slide-title">祝您考試順利！</h1>
+                <p class="text-2xl text-gray-400 mb-12">熟記這 5 大工作負載與 6 大原則，AI-900 輕鬆過關。</p>
+                <button onclick="location.reload()" class="px-8 py-3 bg-blue-600 hover:bg-blue-700 rounded-full text-xl font-bold transition">
+                    <i class="fas fa-redo mr-2"></i> 再看一次
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const progressBar = document.getElementById('progressBar');
+        const slideNumber = document.getElementById('slideNumber');
+        const totalSlides = slides.length;
+
+        function updateSlideUI() {
+            slides.forEach((slide, index) => {
+                slide.classList.remove('active', 'prev');
+                if (index === currentSlide) {
+                    slide.classList.add('active');
+                } else if (index < currentSlide) {
+                    slide.classList.add('prev');
+                }
+            });
+
+            // Update Progress Bar
+            const progress = ((currentSlide + 1) / totalSlides) * 100;
+            progressBar.style.width = `${progress}%`;
+            slideNumber.innerText = `${currentSlide + 1} / ${totalSlides}`;
+        }
+
+        function changeSlide(direction) {
+            const nextSlide = currentSlide + direction;
+            if (nextSlide >= 0 && nextSlide < totalSlides) {
+                currentSlide = nextSlide;
+                updateSlideUI();
+            }
+        }
+
+        // Keyboard Navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                changeSlide(1);
+            } else if (e.key === 'ArrowLeft') {
+                changeSlide(-1);
+            }
+        });
+
+        // Initialize
+        updateSlideUI();
+    </script>
+</body>
+</html>
