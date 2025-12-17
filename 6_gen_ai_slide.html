@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -37,7 +38,8 @@
             justify-content: center;
             align-items: center;
             padding: 2rem;
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); /* Slate theme */
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            /* Slate theme */
             z-index: 1;
         }
 
@@ -59,7 +61,8 @@
             font-weight: 900;
             margin-bottom: 2rem;
             text-align: center;
-            background: linear-gradient(to right, #2dd4bf, #3b82f6); /* Teal/Blue theme */
+            background: linear-gradient(to right, #2dd4bf, #3b82f6);
+            /* Teal/Blue theme */
             background-clip: text;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -84,7 +87,7 @@
         /* Interactive Elements */
         .slider-container {
             width: 100%;
-            background: rgba(255,255,255,0.1);
+            background: rgba(255, 255, 255, 0.1);
             padding: 1.5rem;
             border-radius: 1rem;
         }
@@ -98,6 +101,7 @@
             border-radius: 5px;
             outline: none;
         }
+
         input[type="range"]::-webkit-slider-thumb {
             appearance: none;
             -webkit-appearance: none;
@@ -121,10 +125,25 @@
             opacity: 0;
         }
 
-        .token-1 { background-color: #3b82f6; color: white; }
-        .token-2 { background-color: #10b981; color: white; }
-        .token-3 { background-color: #f59e0b; color: white; }
-        .token-4 { background-color: #ef4444; color: white; }
+        .token-1 {
+            background-color: #3b82f6;
+            color: white;
+        }
+
+        .token-2 {
+            background-color: #10b981;
+            color: white;
+        }
+
+        .token-3 {
+            background-color: #f59e0b;
+            color: white;
+        }
+
+        .token-4 {
+            background-color: #ef4444;
+            color: white;
+        }
 
         /* DALL-E Visualization */
         .dalle-canvas {
@@ -169,8 +188,13 @@
             background: rgba(255, 255, 255, 0.3);
         }
 
-        .prev-btn { left: 2rem; }
-        .next-btn { right: 2rem; }
+        .prev-btn {
+            left: 2rem;
+        }
+
+        .next-btn {
+            right: 2rem;
+        }
 
         /* Progress Bar */
         .progress-bar {
@@ -188,30 +212,55 @@
             bottom: 1.5rem;
             right: 2rem;
             font-size: 1rem;
-            color: rgba(255,255,255,0.5);
+            color: rgba(255, 255, 255, 0.5);
             z-index: 100;
         }
 
         /* Animations */
         @keyframes float {
-            0% { transform: translateY(0px); }
-            50% { transform: translateY(-10px); }
-            100% { transform: translateY(0px); }
+            0% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+
+            100% {
+                transform: translateY(0px);
+            }
         }
-        .animate-float { animation: float 3s ease-in-out infinite; }
+
+        .animate-float {
+            animation: float 3s ease-in-out infinite;
+        }
 
         @keyframes fadeIn {
-            to { opacity: 1; }
+            to {
+                opacity: 1;
+            }
         }
 
         @keyframes glow {
-            0% { box-shadow: 0 0 5px #2dd4bf; }
-            50% { box-shadow: 0 0 20px #2dd4bf; }
-            100% { box-shadow: 0 0 5px #2dd4bf; }
+            0% {
+                box-shadow: 0 0 5px #2dd4bf;
+            }
+
+            50% {
+                box-shadow: 0 0 20px #2dd4bf;
+            }
+
+            100% {
+                box-shadow: 0 0 5px #2dd4bf;
+            }
         }
-        .glow-effect { animation: glow 2s infinite; }
+
+        .glow-effect {
+            animation: glow 2s infinite;
+        }
     </style>
 </head>
+
 <body>
 
     <div class="slide-container">
@@ -239,17 +288,20 @@
             <h1 class="slide-title">本章節三大核心</h1>
             <div class="grid grid-cols-3 gap-8 w-full max-w-6xl">
                 <div class="concept-card flex flex-col items-center text-center">
-                    <div class="bg-teal-500/20 p-4 rounded-full mb-4 text-teal-400 text-4xl"><i class="fas fa-robot"></i></div>
+                    <div class="bg-teal-500/20 p-4 rounded-full mb-4 text-teal-400 text-4xl"><i
+                            class="fas fa-robot"></i></div>
                     <h3 class="text-2xl font-bold mb-2">1. 生成式 AI 模型</h3>
                     <p class="text-gray-400">GPT, DALL-E, Codex</p>
                 </div>
                 <div class="concept-card flex flex-col items-center text-center">
-                    <div class="bg-blue-500/20 p-4 rounded-full mb-4 text-blue-400 text-4xl"><i class="fas fa-sliders-h"></i></div>
+                    <div class="bg-blue-500/20 p-4 rounded-full mb-4 text-blue-400 text-4xl"><i
+                            class="fas fa-sliders-h"></i></div>
                     <h3 class="text-2xl font-bold mb-2">2. 服務參數</h3>
                     <p class="text-gray-400">溫度 (Temperature) 與 Token</p>
                 </div>
                 <div class="concept-card flex flex-col items-center text-center">
-                    <div class="bg-purple-500/20 p-4 rounded-full mb-4 text-purple-400 text-4xl"><i class="fas fa-brain"></i></div>
+                    <div class="bg-purple-500/20 p-4 rounded-full mb-4 text-purple-400 text-4xl"><i
+                            class="fas fa-brain"></i></div>
                     <h3 class="text-2xl font-bold mb-2">3. LLM 基礎</h3>
                     <p class="text-gray-400">Transformer 與提示工程</p>
                 </div>
@@ -354,7 +406,8 @@
 
                 <div class="dalle-canvas rounded-xl shadow-2xl glow-effect">
                     <i class="fas fa-cat pixel-art text-white"></i>
-                    <i class="fas fa-glasses absolute text-5xl text-yellow-400 pixel-art" style="top: 115px; left: 105px;"></i>
+                    <i class="fas fa-glasses absolute text-5xl text-yellow-400 pixel-art"
+                        style="top: 80px; left: 160px;"></i>
                 </div>
             </div>
         </div>
@@ -375,7 +428,8 @@
 
                         <div class="p-4 bg-gray-900 rounded-lg font-mono text-lg">
                             <span class="text-gray-500">句子：</span><br>
-                            "這顆<span class="text-green-400 font-bold border-b-2 border-green-400">蘋果</span>真好吃，因為<span class="text-purple-400 font-bold border-b-2 border-purple-400">它</span>很甜。"
+                            "這顆<span class="text-green-400 font-bold border-b-2 border-green-400">蘋果</span>真好吃，因為<span
+                                class="text-purple-400 font-bold border-b-2 border-purple-400">它</span>很甜。"
                         </div>
                         <p class="mt-4 text-sm text-gray-400">
                             <i class="fas fa-info-circle mr-2"></i>
@@ -408,7 +462,8 @@
 
                 <!-- Good Prompt -->
                 <div class="concept-card border-green-500">
-                    <h3 class="text-xl font-bold text-green-400 mb-4"><i class="fas fa-check-circle mr-2"></i> 具體的提示</h3>
+                    <h3 class="text-xl font-bold text-green-400 mb-4"><i class="fas fa-check-circle mr-2"></i> 具體的提示
+                    </h3>
                     <div class="bg-black p-3 rounded mb-2 text-sm">
                         <span class="text-blue-300">User:</span> 寫一封給老闆的請假信，語氣要專業，理由是重感冒，請假兩天。
                     </div>
@@ -555,7 +610,8 @@
                 <h1 class="slide-title">全系列複習完成！</h1>
                 <p class="text-2xl text-gray-400 mb-12">您已掌握 AI-900 所有核心考點。</p>
                 <div class="flex gap-4 justify-center">
-                    <button onclick="location.reload()" class="px-8 py-3 bg-teal-600 hover:bg-teal-700 rounded-full text-xl font-bold transition">
+                    <button onclick="location.reload()"
+                        class="px-8 py-3 bg-teal-600 hover:bg-teal-700 rounded-full text-xl font-bold transition">
                         <i class="fas fa-redo mr-2"></i> 本章重播
                     </button>
                 </div>
@@ -637,4 +693,5 @@
         updateSlideUI();
     </script>
 </body>
+
 </html>
