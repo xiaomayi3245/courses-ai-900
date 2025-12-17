@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -118,8 +119,13 @@
             background: rgba(255, 255, 255, 0.3);
         }
 
-        .prev-btn { left: 2rem; }
-        .next-btn { right: 2rem; }
+        .prev-btn {
+            left: 2rem;
+        }
+
+        .next-btn {
+            right: 2rem;
+        }
 
         /* Progress Bar */
         .progress-bar {
@@ -137,7 +143,7 @@
             bottom: 1.5rem;
             right: 2rem;
             font-size: 1rem;
-            color: rgba(255,255,255,0.5);
+            color: rgba(255, 255, 255, 0.5);
             z-index: 100;
         }
 
@@ -156,9 +162,9 @@
             margin-right: 1rem;
             color: #60a5fa;
         }
-
     </style>
 </head>
+
 <body>
 
     <div class="slide-container">
@@ -187,7 +193,8 @@
         <div class="slide">
             <h1 class="slide-title">本章節兩大重點</h1>
             <div class="flex flex-col md:flex-row gap-8 w-full max-w-5xl">
-                <div class="flex-1 bg-gradient-to-br from-blue-900 to-slate-800 p-8 rounded-2xl border border-blue-500/30">
+                <div
+                    class="flex-1 bg-gradient-to-br from-blue-900 to-slate-800 p-8 rounded-2xl border border-blue-500/30">
                     <div class="text-blue-400 text-5xl mb-4"><i class="fas fa-microchip"></i></div>
                     <h3 class="text-3xl font-bold mb-4">1. 常見 AI 工作負載</h3>
                     <ul class="text-xl text-gray-300 space-y-3">
@@ -198,7 +205,8 @@
                         <li><i class="fas fa-check"></i> 交談式 AI</li>
                     </ul>
                 </div>
-                <div class="flex-1 bg-gradient-to-br from-purple-900 to-slate-800 p-8 rounded-2xl border border-purple-500/30">
+                <div
+                    class="flex-1 bg-gradient-to-br from-purple-900 to-slate-800 p-8 rounded-2xl border border-purple-500/30">
                     <div class="text-purple-400 text-5xl mb-4"><i class="fas fa-balance-scale"></i></div>
                     <h3 class="text-3xl font-bold mb-4">2. 負責任 AI 原則</h3>
                     <ul class="text-xl text-gray-300 space-y-3">
@@ -218,7 +226,8 @@
             <div class="flex w-full max-w-6xl items-center gap-12">
                 <div class="flex-1">
                     <div class="text-blue-400 text-xl font-bold mb-2">工作負載 01</div>
-                    <h1 class="slide-title text-left">機器學習 (Machine Learning)</h1>
+                    <h1 class="slide-title text-left">機器學習<span class="text-4xl">Machine Learning</span></h1>
+
                     <p class="text-2xl text-gray-300 mb-8">基於數學與統計學，讓電腦從資料中學習並做出預測。</p>
 
                     <div class="bg-slate-800 p-6 rounded-xl border-l-4 border-blue-500">
@@ -246,7 +255,7 @@
                     </div>
                 </div>
                 <div class="w-1/3 flex justify-center">
-                    <i class="fas fa-chart-line text-[15rem] text-blue-500 opacity-80"></i>
+                    <img src="img/regression.png" class="w-full h-auto" />
                 </div>
             </div>
         </div>
@@ -259,12 +268,13 @@
                 </div>
                 <div class="flex-1">
                     <div class="text-red-400 text-xl font-bold mb-2">工作負載 02</div>
-                    <h1 class="slide-title text-left">異常偵測 (Anomaly Detection)</h1>
+                    <h1 class="slide-title text-left">異常偵測<span class="text-4xl">Anomaly Detection</span></h1>
                     <p class="text-2xl text-gray-300 mb-8">識別與預期模式不符的罕見事件或觀察結果。</p>
 
                     <div class="grid grid-cols-1 gap-4">
                         <div class="concept-card bg-red-900/20 border-red-500/30">
-                            <h3 class="text-xl font-bold mb-2 text-red-300"><i class="fas fa-credit-card mr-2"></i>金融應用</h3>
+                            <h3 class="text-xl font-bold mb-2 text-red-300"><i class="fas fa-credit-card mr-2"></i>金融應用
+                            </h3>
                             <p class="text-gray-300">偵測信用卡盜刷、詐欺交易。</p>
                         </div>
                         <div class="concept-card bg-red-900/20 border-red-500/30">
@@ -282,10 +292,10 @@
 
         <!-- Slide 5: Workload - Computer Vision -->
         <div class="slide">
-             <div class="flex w-full max-w-6xl items-center gap-12">
+            <div class="flex w-full max-w-6xl items-center gap-12">
                 <div class="flex-1">
                     <div class="text-purple-400 text-xl font-bold mb-2">工作負載 03</div>
-                    <h1 class="slide-title text-left">電腦視覺 (Computer Vision)</h1>
+                    <h1 class="slide-title text-left">電腦視覺<span class="text-4xl">Computer Vision</span></h1>
                     <p class="text-2xl text-gray-300 mb-8">使應用程式能夠「看見」、解讀與分析影像或影片。</p>
 
                     <div class="grid grid-cols-2 gap-4">
@@ -322,14 +332,21 @@
                 </div>
                 <div class="flex-1">
                     <div class="text-yellow-400 text-xl font-bold mb-2">工作負載 04</div>
-                    <h1 class="slide-title text-left">自然語言處理 (NLP)</h1>
+                    <h1 class="slide-title text-left">自然語言處理<span class="text-4xl">Natural Language Processing,
+                            NLP</span>
+                    </h1>
                     <p class="text-2xl text-gray-300 mb-8">讓電腦理解、分析與生成人類語言 (文字或語音)。</p>
 
                     <ul class="space-y-4 text-xl">
-                        <li class="bg-slate-800 p-4 rounded-lg"><i class="fas fa-heart text-pink-500"></i> <strong>情感分析 (Sentiment Analysis)：</strong> 判斷評論是正面、負面還是中立。</li>
-                        <li class="bg-slate-800 p-4 rounded-lg"><i class="fas fa-language text-blue-400"></i> <strong>翻譯 (Translation)：</strong> 跨語言溝通。</li>
-                        <li class="bg-slate-800 p-4 rounded-lg"><i class="fas fa-tag text-green-400"></i> <strong>實體辨識 (NER)：</strong> 從文章中抓出人名、地點、日期、公司名。</li>
-                        <li class="bg-slate-800 p-4 rounded-lg"><i class="fas fa-microphone text-gray-400"></i> <strong>語音辨識與合成：</strong> 語音轉文字 (STT) / 文字轉語音 (TTS)。</li>
+                        <li class="bg-slate-800 p-4 rounded-lg"><i class="fas fa-heart text-pink-500"></i> <strong>情感分析
+                                (Sentiment Analysis)：</strong> 判斷評論是正面、負面還是中立。</li>
+                        <li class="bg-slate-800 p-4 rounded-lg"><i class="fas fa-language text-blue-400"></i> <strong>翻譯
+                                (Translation)：</strong> 跨語言溝通。</li>
+                        <li class="bg-slate-800 p-4 rounded-lg"><i class="fas fa-tag text-green-400"></i> <strong>實體辨識
+                                (NER)：</strong> 從文章中抓出人名、地點、日期、公司名。</li>
+                        <li class="bg-slate-800 p-4 rounded-lg"><i class="fas fa-microphone text-gray-400"></i>
+                            <strong>語音辨識與合成：</strong> 語音轉文字 (STT) / 文字轉語音 (TTS)。
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -337,10 +354,10 @@
 
         <!-- Slide 7: Workload - Conversational AI -->
         <div class="slide">
-             <div class="flex w-full max-w-6xl items-center gap-12">
+            <div class="flex w-full max-w-6xl items-center gap-12">
                 <div class="flex-1">
                     <div class="text-indigo-400 text-xl font-bold mb-2">工作負載 05</div>
-                    <h1 class="slide-title text-left">交談式 AI (Conversational AI)</h1>
+                    <h1 class="slide-title text-left">交談式 AI<span class="text-4xl">Conversational AI</span></h1>
                     <p class="text-2xl text-gray-300 mb-8">透過對話與使用者互動的 AI 代理人 (Agent)。</p>
 
                     <div class="bg-indigo-900/30 border border-indigo-500/50 p-8 rounded-2xl">
@@ -357,8 +374,10 @@
                                 <p class="text-sm text-gray-400 mt-2">Siri, Cortana<br>智慧音箱</p>
                             </div>
                         </div>
-                        <div class="mt-6 p-4 bg-yellow-900/40 rounded border border-yellow-600/50 text-yellow-200 text-sm">
-                            <i class="fas fa-lightbulb mr-2"></i> <strong>考試陷阱：</strong> 雖然聊天機器人用到 NLP 技術，但若題目強調「與使用者對話互動的介面」，答案通常是「交談式 AI」。
+                        <div
+                            class="mt-6 p-4 bg-yellow-900/40 rounded border border-yellow-600/50 text-yellow-200 text-sm">
+                            <i class="fas fa-lightbulb mr-2"></i> <strong>考試陷阱：</strong> 雖然聊天機器人用到 NLP
+                            技術，但若題目強調「與使用者對話互動的介面」，答案通常是「交談式 AI」。
                         </div>
                     </div>
                 </div>
@@ -398,11 +417,11 @@
                     <div class="space-y-6 text-xl">
                         <div class="p-6 bg-slate-800 rounded-xl">
                             <h3 class="font-bold text-blue-300 mb-2">核心概念</h3>
-                            <p>不應基於種族、性別、年齡、國籍或宗教信仰而產生歧視或偏差。</p>
+                            <p>不應基於種族、性別、年齡、國籍、宗教信仰或特定族群而產生歧視或偏差。</p>
                         </div>
                         <div class="p-6 bg-slate-800 rounded-xl">
                             <h3 class="font-bold text-green-300 mb-2"><i class="fas fa-check-circle"></i> 考題範例</h3>
-                            <p>銀行貸款審核系統，對於信用條件相同的男性與女性，應給予相同的核准結果。</p>
+                            <p>銀行貸款審核系統，對於信用條件相同的男性與女性，應給予相同的核准結果。訓練系統的資料集偏差會導致不公平的結果。</p>
                         </div>
                     </div>
                 </div>
@@ -411,10 +430,11 @@
 
         <!-- Slide 10: Principle - Reliability -->
         <div class="slide">
-             <div class="flex w-full max-w-5xl items-center gap-12">
+            <div class="flex w-full max-w-5xl items-center gap-12">
                 <div class="flex-1">
                     <div class="text-green-400 text-xl font-bold mb-2">原則 02</div>
-                    <h1 class="slide-title text-left">可靠性與安全性<br><span class="text-4xl">(Reliability & Safety)</span></h1>
+                    <h1 class="slide-title text-left">可靠性與安全性<br><span class="text-4xl">(Reliability & Safety)</span>
+                    </h1>
                     <p class="text-3xl text-gray-300 mb-8 font-light">AI 應能可靠且安全地運作。</p>
 
                     <div class="space-y-6 text-xl">
@@ -424,7 +444,8 @@
                         </div>
                         <div class="p-6 bg-slate-800 rounded-xl">
                             <h3 class="font-bold text-blue-300 mb-2"><i class="fas fa-check-circle"></i> 考題範例</h3>
-                            <p>自動駕駛汽車即使在惡劣天氣或感測器故障時，也能安全地停靠路邊，不造成傷害。</p>
+                            <p>自動駕駛汽車即使在惡劣天氣或感測器故障時，也能安全地停靠路邊，不造成傷害。系統在生命週期內維持一致的作業。即使發生意外情況，AI系統也必須始終如一地按預期運作。提供給
+                                AI系統的異常值或缺少值時，系統應能適應。</p>
                         </div>
                     </div>
                 </div>
@@ -452,7 +473,7 @@
                         </div>
                         <div class="p-6 bg-slate-800 rounded-xl">
                             <h3 class="font-bold text-blue-300 mb-2"><i class="fas fa-check-circle"></i> 考題範例</h3>
-                            <p>醫療 AI 在訓練模型時，必須將病歷資料進行「去識別化 (De-identification)」，移除姓名與身分證號。</p>
+                            <p>醫療 AI 在訓練模型時，必須將病歷資料進行「去識別化 (De-identification)」，移除姓名與身分證號。AI系統必須保護及保障個人與企業資訊。</p>
                         </div>
                     </div>
                 </div>
@@ -461,7 +482,7 @@
 
         <!-- Slide 12: Principle - Inclusiveness -->
         <div class="slide">
-             <div class="flex w-full max-w-5xl items-center gap-12">
+            <div class="flex w-full max-w-5xl items-center gap-12">
                 <div class="flex-1">
                     <div class="text-orange-400 text-xl font-bold mb-2">原則 04</div>
                     <h1 class="slide-title text-left">包容性 (Inclusiveness)</h1>
@@ -502,7 +523,9 @@
                         </div>
                         <div class="p-6 bg-slate-800 rounded-xl">
                             <h3 class="font-bold text-blue-300 mb-2"><i class="fas fa-check-circle"></i> 考題範例</h3>
-                            <p>當 AI 拒絕某人的貸款申請時，必須能夠解釋「為什麼」被拒絕 (例如：因為收入不足，而非因為住址)。</p>
+                            <p>當 AI 拒絕某人的貸款申請時，必須能夠解釋「為什麼」被拒絕
+                                (例如：因為收入不足，而非因為住址)。提供文件以利開發人員偵錯程式碼。評估是否應核准貸款的AI系統時，制定決策所用的因素應為可解釋的。協助使用者了解AI系統做的決定。確保應用程式會記錄核准或拒絕貸款的原因，並向申請人提供報告。
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -511,7 +534,7 @@
 
         <!-- Slide 14: Principle - Accountability -->
         <div class="slide">
-             <div class="flex w-full max-w-5xl items-center gap-12">
+            <div class="flex w-full max-w-5xl items-center gap-12">
                 <div class="flex-1">
                     <div class="text-red-400 text-xl font-bold mb-2">原則 06</div>
                     <h1 class="slide-title text-left">權責性 (Accountability)</h1>
@@ -524,7 +547,7 @@
                         </div>
                         <div class="p-6 bg-slate-800 rounded-xl">
                             <h3 class="font-bold text-blue-300 mb-2"><i class="fas fa-check-circle"></i> 考題範例</h3>
-                            <p>公司必須建立內部治理框架，確保開發團隊遵循道德準則，並對 AI 造成的錯誤結果負責。</p>
+                            <p>公司必須建立內部治理框架，確保開發團隊遵循道德準則，並對 AI 造成的錯誤結果負責。確保人類可覆寫 AI 系統制定的決策。</p>
                         </div>
                     </div>
                 </div>
@@ -540,7 +563,8 @@
                 <i class="fas fa-flag-checkered text-8xl text-yellow-500 mb-8"></i>
                 <h1 class="slide-title">祝您考試順利！</h1>
                 <p class="text-2xl text-gray-400 mb-12">熟記這 5 大工作負載與 6 大原則，AI-900 輕鬆過關。</p>
-                <button onclick="location.reload()" class="px-8 py-3 bg-blue-600 hover:bg-blue-700 rounded-full text-xl font-bold transition">
+                <button onclick="location.reload()"
+                    class="px-8 py-3 bg-blue-600 hover:bg-blue-700 rounded-full text-xl font-bold transition">
                     <i class="fas fa-redo mr-2"></i> 再看一次
                 </button>
             </div>
@@ -592,4 +616,5 @@
         updateSlideUI();
     </script>
 </body>
+
 </html>
